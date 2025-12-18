@@ -1,4 +1,3 @@
-// src/components/sections/KontakSection.tsx
 import React from 'react';
 import { Mail, BookOpen, Briefcase } from 'lucide-react';
 
@@ -7,8 +6,8 @@ export default function KontakSection() {
     {
       icon: Mail,
       label: 'Email',
-      value: 'email@university.ac.id',
-      href: 'mailto:email@university.ac.id',
+      value: 'dadang@fisip.unmul.ac.id',
+      href: 'mailto:dadang@fisip.unmul.ac.id',
     },
     {
       icon: BookOpen,

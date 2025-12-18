@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import StatCard from '@/components/cards/StatCard';
@@ -29,9 +31,9 @@ export default function HeroSection({ statistik }: HeroSectionProps) {
 
                     <p className="text-xl md:text-2xl text-zinc-400 max-w-3xl leading-relaxed">
                         Dosen dan peneliti di bidang{' '}
-                        <span className="text-white font-medium">Ilmu Komputer</span> dengan fokus pada{' '}
-                        <span className="text-white font-medium">kecerdasan buatan</span>, machine learning,
-                        dan pengembangan sistem cerdas untuk solusi industri 4.0.
+                        <span className="text-white font-medium">Hubungan Internasional</span> dengan fokus pada{' '}
+                        <span className="text-white font-medium"></span>
+                        
                     </p>
                 </div>
 
@@ -45,36 +47,6 @@ export default function HeroSection({ statistik }: HeroSectionProps) {
                         ))}
                     </div>
                 )}
-
-                <div
-                    className="mt-12 flex flex-wrap gap-4 fade-in"
-                    style={{ animationDelay: '0.4s' }}
-                >
-                    <a
-                        href="#publikasi"
-                        className="px-8 py-4 bg-white text-black font-medium rounded-lg hover:bg-zinc-200 transition-all"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            document.getElementById('publikasi')?.scrollIntoView({ behavior: 'smooth' });
-                        }}
-                    >
-                        Lihat Publikasi
-                    </a>
-                    <a
-                        href="#kontak"
-                        className="px-8 py-4 bg-zinc-900 border border-zinc-700 text-white font-medium rounded-lg hover:bg-zinc-800 transition-all"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            document.getElementById('kontak')?.scrollIntoView({ behavior: 'smooth' });
-                        }}
-                    >
-                        Hubungi Saya
-                    </a>
-                </div>
-            </div>
-
-            <div className="scroll-indicator">
-                <ChevronDown className="w-6 h-6 text-zinc-600" />
             </div>
         </section>
     );
