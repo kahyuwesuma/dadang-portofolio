@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-import { ChevronDown } from 'lucide-react';
 import StatCard from '@/components/cards/StatCard';
 import type { Statistik } from '@/lib/types';
 
@@ -31,9 +29,9 @@ export default function HeroSection({ statistik }: HeroSectionProps) {
 
                     <p className="text-xl md:text-2xl text-zinc-400 max-w-3xl leading-relaxed">
                         Dosen dan peneliti di bidang{' '}
-                        <span className="text-white font-medium">Hubungan Internasional</span> dengan fokus pada{' '}
-                        <span className="text-white font-medium"></span>
-                        
+                        <span className="text-white font-medium">Hubungan Internasional</span> Fakultas Ilmu Sosial dan Politik{' '}
+                        <span className="text-white font-medium">Universitas Mulawarman</span>
+
                     </p>
                 </div>
 
