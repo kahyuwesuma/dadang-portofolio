@@ -26,7 +26,6 @@ export default function AdminLayoutContent({ children }: AdminLayoutContentProps
   const router = useRouter()
   const { user, loading, signOut } = useAuth()
 
-  // ✅ AUTH GUARD – SATU ARAH, TANPA LOOP
   useEffect(() => {
     if (!loading && !user && pathname !== '/admin/login') {
       router.replace('/admin/login')
@@ -48,10 +47,8 @@ export default function AdminLayoutContent({ children }: AdminLayoutContentProps
     { icon: Heart, label: 'Pengabdian', href: '/admin/pengabdian' },
     { icon: BarChart3, label: 'Statistik', href: '/admin/statistik' },
     { icon: Activity, label: 'Activity Log', href: '/admin/activity' },
-    { icon: Settings, label: 'Settings', href: '/admin/settings' },
   ]
 
-  // ⏳ Loading (sekali saja, tidak loop)
   if (loading) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center">

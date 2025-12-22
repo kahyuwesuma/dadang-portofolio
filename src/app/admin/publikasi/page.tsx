@@ -1,4 +1,3 @@
-// src/app/admin/publikasi/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -67,17 +66,23 @@ export default function PublikasiPage() {
     if (!confirm(`Hapus publikasi "${pub.judul}"?`)) return;
 
     setIsDeleting(true);
-    const adminUserId = 'temp-admin-id'; // TODO: Get from auth session
-    const result = await deletePublikasi(pub.id, adminUserId);
 
-    if (result.success) {
+    const res = await fetch(`/api/publikasi/${pub.id}`, {
+      method: 'DELETE',
+    });
+
+    const result = await res.json();
+
+    if (res.ok) {
       alert('Publikasi berhasil dihapus');
       loadPublikasi();
     } else {
-      alert(`Error: ${result.error}`);
+      alert(result.error || 'Gagal menghapus');
     }
+
     setIsDeleting(false);
   };
+
 
   const handleModalClose = (shouldRefresh: boolean) => {
     setIsModalOpen(false);

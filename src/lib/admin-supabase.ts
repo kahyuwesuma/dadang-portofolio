@@ -1,6 +1,7 @@
-// src/lib/admin-supabase.ts
+// src/lib/admin-supabase.ts (UPDATED VERSION)
 
 import { supabase } from './supabase';
+import { getCurrentAdminUser } from './supabase-auth';
 import type {
   AdminUser,
   ActivityLog,
@@ -10,6 +11,15 @@ import type {
   StatistikFormData,
 } from './admin-types';
 import type { Publikasi, PengabdianMasyarakat, Statistik } from './types';
+
+// ============================================
+// Helper: Get Admin User ID from current session
+// ============================================
+
+async function getAdminUserId(): Promise<string | null> {
+  const adminUser = await getCurrentAdminUser();
+  return adminUser?.id || null;
+}
 
 // ============================================
 // Dashboard Functions
@@ -47,10 +57,13 @@ export async function getRecentActivities(limit: number = 10): Promise<ActivityL
 // ============================================
 
 export async function createPublikasi(
-  data: PublikasiFormData,
-  adminUserId: string
+  data: PublikasiFormData
 ): Promise<{ success: boolean; data?: Publikasi; error?: string }> {
   try {
+    const adminUserId = await getAdminUserId();
+    if (!adminUserId) throw new Error('Not authenticated');
+
+    // Insert publikasi
     const { data: publikasi, error: insertError } = await supabase
       .from('publikasi')
       .insert({
@@ -67,6 +80,7 @@ export async function createPublikasi(
 
     if (insertError) throw insertError;
 
+    // Insert tags if any
     if (data.tags && data.tags.length > 0 && publikasi) {
       const tagsData = data.tags.map((tag) => ({
         publikasi_id: publikasi.id,
@@ -80,7 +94,10 @@ export async function createPublikasi(
       if (tagsError) console.error('Error inserting tags:', tagsError);
     }
 
-    await logActivity(adminUserId, 'CREATE', 'publikasi', publikasi.id, null, publikasi);
+    // Log activity
+    if (adminUserId) {
+      await logActivity(adminUserId, 'CREATE', 'publikasi', publikasi.id, null, publikasi);
+    }
 
     return { success: true, data: publikasi as Publikasi };
   } catch (error: any) {
@@ -91,35 +108,42 @@ export async function createPublikasi(
 
 export async function updatePublikasi(
   id: string,
-  data: Partial<PublikasiFormData>,
-  adminUserId: string
+  data: Partial<PublikasiFormData>
 ): Promise<{ success: boolean; data?: Publikasi; error?: string }> {
   try {
+    const adminUserId = await getAdminUserId();
+    if (!adminUserId) throw new Error('Not authenticated');
+
+    // Get old data first
     const { data: oldData } = await supabase
       .from('publikasi')
       .select('*')
       .eq('id', id)
       .single();
 
+    // Build update object with only defined fields
+    const updateData: any = {};
+    if (data.judul !== undefined) updateData.judul = data.judul;
+    if (data.kategori !== undefined) updateData.kategori = data.kategori;
+    if (data.penulis !== undefined) updateData.penulis = data.penulis;
+    if (data.tahun !== undefined) updateData.tahun = data.tahun;
+    if (data.deskripsi !== undefined) updateData.deskripsi = data.deskripsi;
+    if (data.url !== undefined) updateData.url = data.url;
+    if (data.keywords !== undefined) updateData.keywords = data.keywords;
+
     // Update publikasi
     const { data: publikasi, error: updateError } = await supabase
       .from('publikasi')
-      .update({
-        judul: data.judul,
-        kategori: data.kategori,
-        penulis: data.penulis,
-        tahun: data.tahun,
-        deskripsi: data.deskripsi,
-        url: data.url,
-        keywords: data.keywords,
-      })
+      .update(updateData)
       .eq('id', id)
       .select()
       .single();
 
     if (updateError) throw updateError;
 
+    // Update tags if provided
     if (data.tags !== undefined) {
+      // Delete old tags
       await supabase.from('publikasi_tags').delete().eq('publikasi_id', id);
 
       // Insert new tags
@@ -133,7 +157,10 @@ export async function updatePublikasi(
       }
     }
 
-    await logActivity(adminUserId, 'UPDATE', 'publikasi', id, oldData, publikasi);
+    // Log activity
+    if (adminUserId) {
+      await logActivity(adminUserId, 'UPDATE', 'publikasi', id, oldData, publikasi);
+    }
 
     return { success: true, data: publikasi as Publikasi };
   } catch (error: any) {
@@ -143,16 +170,20 @@ export async function updatePublikasi(
 }
 
 export async function deletePublikasi(
-  id: string,
-  adminUserId: string
+  id: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const adminUserId = await getAdminUserId();
+    if (!adminUserId) throw new Error('Not authenticated');
+
+    // Get data before delete for logging
     const { data: oldData } = await supabase
       .from('publikasi')
       .select('*')
       .eq('id', id)
       .single();
 
+    // Delete (cascade will handle tags)
     const { error: deleteError } = await supabase
       .from('publikasi')
       .delete()
@@ -160,7 +191,10 @@ export async function deletePublikasi(
 
     if (deleteError) throw deleteError;
 
-    await logActivity(adminUserId, 'DELETE', 'publikasi', id, oldData, null);
+    // Log activity
+    if (adminUserId) {
+      await logActivity(adminUserId, 'DELETE', 'publikasi', id, oldData, null);
+    }
 
     return { success: true };
   } catch (error: any) {
@@ -174,10 +208,12 @@ export async function deletePublikasi(
 // ============================================
 
 export async function createPengabdian(
-  data: PengabdianFormData,
-  adminUserId: string
+  data: PengabdianFormData
 ): Promise<{ success: boolean; data?: PengabdianMasyarakat; error?: string }> {
   try {
+    const adminUserId = await getAdminUserId();
+    if (!adminUserId) throw new Error('Not authenticated');
+
     const { data: pengabdian, error: insertError } = await supabase
       .from('pengabdian')
       .insert(data)
@@ -186,6 +222,7 @@ export async function createPengabdian(
 
     if (insertError) throw insertError;
 
+    // Log activity
     await logActivity(adminUserId, 'CREATE', 'pengabdian', pengabdian.id, null, pengabdian);
 
     return { success: true, data: pengabdian as PengabdianMasyarakat };
@@ -197,10 +234,12 @@ export async function createPengabdian(
 
 export async function updatePengabdian(
   id: string,
-  data: Partial<PengabdianFormData>,
-  adminUserId: string
+  data: Partial<PengabdianFormData>
 ): Promise<{ success: boolean; data?: PengabdianMasyarakat; error?: string }> {
   try {
+    const adminUserId = await getAdminUserId();
+    if (!adminUserId) throw new Error('Not authenticated');
+
     // Get old data
     const { data: oldData } = await supabase
       .from('pengabdian')
@@ -229,10 +268,13 @@ export async function updatePengabdian(
 }
 
 export async function deletePengabdian(
-  id: string,
-  adminUserId: string
+  id: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const adminUserId = await getAdminUserId();
+    if (!adminUserId) throw new Error('Not authenticated');
+
+    // Get data before delete
     const { data: oldData } = await supabase
       .from('pengabdian')
       .select('*')
@@ -262,10 +304,12 @@ export async function deletePengabdian(
 // ============================================
 
 export async function createStatistik(
-  data: StatistikFormData,
-  adminUserId: string
+  data: StatistikFormData
 ): Promise<{ success: boolean; data?: Statistik; error?: string }> {
   try {
+    const adminUserId = await getAdminUserId();
+    if (!adminUserId) throw new Error('Not authenticated');
+
     const { data: statistik, error: insertError } = await supabase
       .from('statistik')
       .insert(data)
@@ -274,6 +318,7 @@ export async function createStatistik(
 
     if (insertError) throw insertError;
 
+    // Log activity
     await logActivity(adminUserId, 'CREATE', 'statistik', statistik.id, null, statistik);
 
     return { success: true, data: statistik as Statistik };
@@ -285,16 +330,20 @@ export async function createStatistik(
 
 export async function updateStatistik(
   id: string,
-  data: Partial<StatistikFormData>,
-  adminUserId: string
+  data: Partial<StatistikFormData>
 ): Promise<{ success: boolean; data?: Statistik; error?: string }> {
   try {
+    const adminUserId = await getAdminUserId();
+    if (!adminUserId) throw new Error('Not authenticated');
+
+    // Get old data
     const { data: oldData } = await supabase
       .from('statistik')
       .select('*')
       .eq('id', id)
       .single();
 
+    // Update
     const { data: statistik, error: updateError } = await supabase
       .from('statistik')
       .update(data)
@@ -304,6 +353,7 @@ export async function updateStatistik(
 
     if (updateError) throw updateError;
 
+    // Log activity
     await logActivity(adminUserId, 'UPDATE', 'statistik', id, oldData, statistik);
 
     return { success: true, data: statistik as Statistik };
@@ -314,16 +364,20 @@ export async function updateStatistik(
 }
 
 export async function deleteStatistik(
-  id: string,
-  adminUserId: string
+  id: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const adminUserId = await getAdminUserId();
+    if (!adminUserId) throw new Error('Not authenticated');
+
+    // Get data before delete
     const { data: oldData } = await supabase
       .from('statistik')
       .select('*')
       .eq('id', id)
       .single();
 
+    // Delete
     const { error: deleteError } = await supabase
       .from('statistik')
       .delete()
@@ -331,6 +385,7 @@ export async function deleteStatistik(
 
     if (deleteError) throw deleteError;
 
+    // Log activity
     await logActivity(adminUserId, 'DELETE', 'statistik', id, oldData, null);
 
     return { success: true };
@@ -373,7 +428,7 @@ async function logActivity(
 export async function getAdminUsers(): Promise<AdminUser[]> {
   const { data, error } = await supabase
     .from('admin_users')
-    .select('id, email, name, role, is_active, last_login, created_at')
+    .select('id, auth_user_id, email, name, role, is_active, last_login, created_at')
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -387,7 +442,7 @@ export async function getAdminUsers(): Promise<AdminUser[]> {
 export async function getAdminUser(id: string): Promise<AdminUser | null> {
   const { data, error } = await supabase
     .from('admin_users')
-    .select('id, email, name, role, is_active, last_login, created_at')
+    .select('id, auth_user_id, email, name, role, is_active, last_login, created_at')
     .eq('id', id)
     .single();
 

@@ -1,7 +1,9 @@
+export type PublikasiKategori = 'Buku' | 'Jurnal' | 'Op-ed' | 'Press';
+
 export interface Publikasi {
   id: string;
   judul: string;
-  kategori: 'buku' | 'jurnal' | 'op-ed' | 'press';
+  kategori: PublikasiKategori; 
   penulis: string;
   tahun: number;
   deskripsi?: string;
@@ -37,10 +39,10 @@ export interface Statistik {
   updated_at?: string;
 }
 
-export type FilterKategori = 'all' | 'buku' | 'jurnal' | 'op-ed' | 'press';
+export type FilterKategori = 'all' | PublikasiKategori;
 
 export interface CategoryBadgeProps {
-  kategori: Publikasi['kategori'];
+  kategori: PublikasiKategori;
 }
 
 export interface FilterButtonProps {
