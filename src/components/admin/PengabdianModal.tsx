@@ -18,6 +18,7 @@ interface PengabdianModalProps {
 export default function PengabdianModal({ pengabdian, onClose }: PengabdianModalProps) {
   const isEdit = !!pengabdian;
   const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState<PengabdianFormData>({
     judul: '',
     tanggal: new Date().toISOString().split('T')[0],
@@ -26,7 +27,7 @@ export default function PengabdianModal({ pengabdian, onClose }: PengabdianModal
     deskripsi: '',
     lokasi: '',
     jumlah_peserta: '',
-    keywords: '',
+    keywords: '', // ← selalu kosong, tidak ada input
   });
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function PengabdianModal({ pengabdian, onClose }: PengabdianModal
         deskripsi: pengabdian.deskripsi,
         lokasi: pengabdian.lokasi,
         jumlah_peserta: pengabdian.jumlah_peserta || '',
-        keywords: pengabdian.keywords || '',
+        keywords: '', // ← dipaksa kosong
       });
     }
   }, [pengabdian]);
@@ -48,6 +49,7 @@ export default function PengabdianModal({ pengabdian, onClose }: PengabdianModal
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -57,7 +59,7 @@ export default function PengabdianModal({ pengabdian, onClose }: PengabdianModal
       const date = new Date(value);
       const months = [
         'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
       ];
       const bulanTahun = `${months[date.getMonth()]} ${date.getFullYear()}`;
       setFormData((prev) => ({ ...prev, bulan_tahun: bulanTahun }));
@@ -68,19 +70,21 @@ export default function PengabdianModal({ pengabdian, onClose }: PengabdianModal
     e.preventDefault();
     setLoading(true);
 
-    const adminUserId = 'temp-admin-id'; 
-
     let result;
     if (isEdit && pengabdian) {
-      result = await updatePengabdian(pengabdian.id, formData, adminUserId);
+      result = await updatePengabdian(pengabdian.id, formData);
     } else {
-      result = await createPengabdian(formData, adminUserId);
+      result = await createPengabdian(formData);
     }
 
     setLoading(false);
 
     if (result.success) {
-      alert(`Pengabdian berhasil ${isEdit ? 'diupdate' : 'ditambahkan'}`);
+      alert(
+        isEdit
+          ? 'Pengabdian berhasil diupdate'
+          : 'Pengabdian berhasil ditambahkan'
+      );
       onClose(true);
     } else {
       alert(`Error: ${result.error}`);
@@ -110,7 +114,6 @@ export default function PengabdianModal({ pengabdian, onClose }: PengabdianModal
             name="judul"
             value={formData.judul}
             onChange={handleChange}
-            placeholder="Masukkan judul kegiatan"
             required
           />
 
@@ -129,7 +132,6 @@ export default function PengabdianModal({ pengabdian, onClose }: PengabdianModal
               name="bulan_tahun"
               value={formData.bulan_tahun}
               onChange={handleChange}
-              placeholder="Desember 2024"
               required
               helperText="Auto-generated dari tanggal"
             />
@@ -153,7 +155,6 @@ export default function PengabdianModal({ pengabdian, onClose }: PengabdianModal
             name="deskripsi"
             value={formData.deskripsi}
             onChange={handleChange}
-            placeholder="Deskripsi kegiatan pengabdian..."
             rows={4}
             required
           />
@@ -163,7 +164,6 @@ export default function PengabdianModal({ pengabdian, onClose }: PengabdianModal
             name="lokasi"
             value={formData.lokasi}
             onChange={handleChange}
-            placeholder="Depok, Jawa Barat"
             required
           />
 
@@ -172,17 +172,7 @@ export default function PengabdianModal({ pengabdian, onClose }: PengabdianModal
             name="jumlah_peserta"
             value={formData.jumlah_peserta ?? ''}
             onChange={handleChange}
-            placeholder="50 peserta atau 200+ peserta"
             helperText="Optional"
-          />
-
-          <Input
-            label="Keywords"
-            name="keywords"
-            value={formData.jumlah_peserta ?? ''}
-            onChange={handleChange}
-            placeholder="digital marketing, umkm, training"
-            helperText="Pisahkan dengan koma untuk search"
           />
 
           {/* Actions */}

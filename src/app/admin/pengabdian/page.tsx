@@ -1,11 +1,10 @@
-// src/app/admin/pengabdian/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
 import { Plus, Edit2, Trash2, Search } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/admin/Button';
 import { getPengabdian } from '@/lib/supabase';
-import { deletePengabdian } from '@/lib/admin-supabase';
 import type { PengabdianMasyarakat } from '@/lib/types';
 import PengabdianModal from '@/components/admin/PengabdianModal';
 
@@ -61,20 +60,59 @@ export default function PengabdianPage() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (item: PengabdianMasyarakat) => {
-    if (!confirm(`Hapus pengabdian "${item.judul}"?`)) return;
+  const handleDelete = (item: PengabdianMasyarakat) => {
+    // Gunakan toast dengan action button untuk konfirmasi
+    toast.error(`Hapus kegiatan "${item.judul}"?`, {
+      description: 'Tindakan ini tidak dapat dibatalkan.',
+      action: {
+        label: 'Hapus',
+        onClick: () => performDelete(item),
+      },
+      cancel: {
+        label: 'Batal',
+        onClick: () => {
+          toast.info('Penghapusan dibatalkan');
+        },
+      },
+      duration: 5000,
+    });
+  };
 
+  const performDelete = async (item: PengabdianMasyarakat) => {
     setIsDeleting(true);
-    const adminUserId = 'temp-admin-id';
-    const result = await deletePengabdian(item.id, adminUserId);
 
-    if (result.success) {
-      alert('Pengabdian berhasil dihapus');
-      loadPengabdian();
-    } else {
-      alert(`Error: ${result.error}`);
+    // Show loading toast
+    const loadingToast = toast.loading('Menghapus kegiatan pengabdian...');
+
+    try {
+      const response = await fetch(`/api/pengabdian/${item.id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      const result = await response.json();
+
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+
+      if (response.ok) {
+        toast.success('Kegiatan berhasil dihapus!', {
+          description: `"${item.judul}" telah dihapus dari database.`,
+        });
+        loadPengabdian();
+      } else {
+        toast.error('Gagal menghapus kegiatan', {
+          description: result.error || 'Terjadi kesalahan saat menghapus kegiatan.',
+        });
+      }
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error('Terjadi kesalahan', {
+        description: 'Tidak dapat terhubung ke server. Silakan coba lagi.',
+      });
+    } finally {
+      setIsDeleting(false);
     }
-    setIsDeleting(false);
   };
 
   const handleModalClose = (shouldRefresh: boolean) => {
@@ -92,6 +130,15 @@ export default function PengabdianPage() {
       planned: 'bg-amber-500/20 text-amber-400',
     };
     return colors[status] || 'bg-zinc-500/20 text-zinc-400';
+  };
+
+  const getStatusLabel = (status: string) => {
+    const labels: Record<string, string> = {
+      selesai: 'Selesai',
+      ongoing: 'Sedang Berjalan',
+      planned: 'Direncanakan',
+    };
+    return labels[status] || status;
   };
 
   if (loading) {
@@ -147,7 +194,7 @@ export default function PengabdianPage() {
                 <p className="text-zinc-400 text-sm">{item.bulan_tahun}</p>
               </div>
               <span className={`px-3 py-1 rounded text-xs font-medium ${getStatusColor(item.status)}`}>
-                {item.status}
+                {getStatusLabel(item.status)}
               </span>
             </div>
 
@@ -194,5 +241,3 @@ export default function PengabdianPage() {
     </div>
   );
 }
-
-// src/app/admin/statistik/page.tsx

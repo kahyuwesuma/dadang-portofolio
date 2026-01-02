@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Plus, Edit2, Trash2, Search } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/admin/Button';
 import { Input } from '@/components/admin/Input';
 import { getPublikasiWithTags } from '@/lib/supabase';
@@ -62,27 +63,59 @@ export default function PublikasiPage() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (pub: Publikasi) => {
-    if (!confirm(`Hapus publikasi "${pub.judul}"?`)) return;
-
-    setIsDeleting(true);
-
-    const res = await fetch(`/api/publikasi/${pub.id}`, {
-      method: 'DELETE',
+  const handleDelete = (pub: Publikasi) => {
+    // Gunakan toast dengan action button untuk konfirmasi
+    toast.error(`Hapus publikasi "${pub.judul}"?`, {
+      description: 'Tindakan ini tidak dapat dibatalkan.',
+      action: {
+        label: 'Hapus',
+        onClick: () => performDelete(pub),
+      },
+      cancel: {
+        label: 'Batal',
+        onClick: () => {
+          toast.info('Penghapusan dibatalkan');
+        },
+      },
+      duration: 5000,
     });
-
-    const result = await res.json();
-
-    if (res.ok) {
-      alert('Publikasi berhasil dihapus');
-      loadPublikasi();
-    } else {
-      alert(result.error || 'Gagal menghapus');
-    }
-
-    setIsDeleting(false);
   };
 
+  const performDelete = async (pub: Publikasi) => {
+    setIsDeleting(true);
+
+    // Show loading toast
+    const loadingToast = toast.loading('Menghapus publikasi...');
+
+    try {
+      const res = await fetch(`/api/publikasi/${pub.id}`, {
+        method: 'DELETE',
+      });
+
+      const result = await res.json();
+
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+
+      if (res.ok) {
+        toast.success('Publikasi berhasil dihapus!', {
+          description: `"${pub.judul}" telah dihapus dari database.`,
+        });
+        loadPublikasi();
+      } else {
+        toast.error('Gagal menghapus publikasi', {
+          description: result.error || 'Terjadi kesalahan saat menghapus publikasi.',
+        });
+      }
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error('Terjadi kesalahan', {
+        description: 'Tidak dapat terhubung ke server. Silakan coba lagi.',
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handleModalClose = (shouldRefresh: boolean) => {
     setIsModalOpen(false);

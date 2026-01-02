@@ -207,63 +207,70 @@ export async function deletePublikasi(
 // Pengabdian CRUD
 // ============================================
 
-export async function createPengabdian(
-  data: PengabdianFormData
-): Promise<{ success: boolean; data?: PengabdianMasyarakat; error?: string }> {
+export async function createPengabdian(payload: any) {
   try {
-    const adminUserId = await getAdminUserId();
-    if (!adminUserId) throw new Error('Not authenticated');
+    const response = await fetch('/api/pengabdian', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
 
-    const { data: pengabdian, error: insertError } = await supabase
-      .from('pengabdian')
-      .insert(data)
-      .select()
-      .single();
+    const result = await response.json();
 
-    if (insertError) throw insertError;
+    if (!response.ok) {
+      return {
+        success: false,
+        error: result.error || 'Failed to create pengabdian',
+      };
+    }
 
-    // Log activity
-    await logActivity(adminUserId, 'CREATE', 'pengabdian', pengabdian.id, null, pengabdian);
-
-    return { success: true, data: pengabdian as PengabdianMasyarakat };
+    return result;
   } catch (error: any) {
-    console.error('Error creating pengabdian:', error);
-    return { success: false, error: error.message };
+    return {
+      success: false,
+      error: error.message || 'Network error',
+    };
   }
 }
+
 
 export async function updatePengabdian(
   id: string,
   data: Partial<PengabdianFormData>
-): Promise<{ success: boolean; data?: PengabdianMasyarakat; error?: string }> {
+): Promise<{
+  success: boolean
+  data?: PengabdianMasyarakat
+  error?: string
+}> {
   try {
-    const adminUserId = await getAdminUserId();
-    if (!adminUserId) throw new Error('Not authenticated');
+    const response = await fetch(`/api/pengabdian/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
 
-    // Get old data
-    const { data: oldData } = await supabase
-      .from('pengabdian')
-      .select('*')
-      .eq('id', id)
-      .single();
+    const result = await response.json();
 
-    // Update
-    const { data: pengabdian, error: updateError } = await supabase
-      .from('pengabdian')
-      .update(data)
-      .eq('id', id)
-      .select()
-      .single();
+    if (!response.ok) {
+      return {
+        success: false,
+        error: result.error || 'Failed to update pengabdian',
+      };
+    }
 
-    if (updateError) throw updateError;
-
-    // Log activity
-    await logActivity(adminUserId, 'UPDATE', 'pengabdian', id, oldData, pengabdian);
-
-    return { success: true, data: pengabdian as PengabdianMasyarakat };
+    return result;
   } catch (error: any) {
     console.error('Error updating pengabdian:', error);
-    return { success: false, error: error.message };
+    return {
+      success: false,
+      error: error.message || 'Network error',
+    };
   }
 }
 
@@ -271,33 +278,30 @@ export async function deletePengabdian(
   id: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const adminUserId = await getAdminUserId();
-    if (!adminUserId) throw new Error('Not authenticated');
+    const response = await fetch(`/api/pengabdian/${id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
 
-    // Get data before delete
-    const { data: oldData } = await supabase
-      .from('pengabdian')
-      .select('*')
-      .eq('id', id)
-      .single();
+    const result = await response.json();
 
-    // Delete
-    const { error: deleteError } = await supabase
-      .from('pengabdian')
-      .delete()
-      .eq('id', id);
-
-    if (deleteError) throw deleteError;
-
-    // Log activity
-    await logActivity(adminUserId, 'DELETE', 'pengabdian', id, oldData, null);
+    if (!response.ok) {
+      return {
+        success: false,
+        error: result.error || 'Failed to delete pengabdian',
+      };
+    }
 
     return { success: true };
   } catch (error: any) {
     console.error('Error deleting pengabdian:', error);
-    return { success: false, error: error.message };
+    return {
+      success: false,
+      error: error.message || 'Network error',
+    };
   }
 }
+
 
 // ============================================
 // Statistik CRUD

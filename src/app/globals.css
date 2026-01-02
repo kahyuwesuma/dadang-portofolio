@@ -45,12 +45,10 @@ body {
   width: 100%;
   height: 100%;
   transition: all 0.6s ease;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.03),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.03),
+      transparent);
 }
 
 .card-hover:hover::before {
@@ -143,11 +141,9 @@ body {
   pointer-events: none;
   width: 500px;
   height: 500px;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.03) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(255, 255, 255, 0.03) 0%,
+      transparent 70%);
 }
 
 /* FILTER */
@@ -279,11 +275,195 @@ body {
 }
 
 @keyframes bounce {
+
   0%,
   100% {
     transform: translateX(-50%) translateY(0);
   }
+
   50% {
     transform: translateX(-50%) translateY(10px);
+  }
+}
+
+/* ========================================
+   Add this to your globals.css or app/admin/globals.css
+   ======================================== */
+
+/* Sonner Toast Base Styling */
+.sonner-toast {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+/* Dark theme for all toast types */
+[data-sonner-toast] {
+  background: #18181b !important;
+  border: 1px solid #27272a !important;
+  color: #fff !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Success Toast */
+[data-sonner-toast][data-type="success"] {
+  border-color: #10b981 !important;
+}
+
+[data-sonner-toast][data-type="success"] [data-icon] {
+  color: #10b981 !important;
+}
+
+/* Error Toast */
+[data-sonner-toast][data-type="error"] {
+  border-color: #ef4444 !important;
+}
+
+[data-sonner-toast][data-type="error"] [data-icon] {
+  color: #ef4444 !important;
+}
+
+/* Warning Toast */
+[data-sonner-toast][data-type="warning"] {
+  border-color: #f59e0b !important;
+}
+
+[data-sonner-toast][data-type="warning"] [data-icon] {
+  color: #f59e0b !important;
+}
+
+/* Info Toast */
+[data-sonner-toast][data-type="info"] {
+  border-color: #3b82f6 !important;
+}
+
+[data-sonner-toast][data-type="info"] [data-icon] {
+  color: #3b82f6 !important;
+}
+
+/* Loading Toast */
+[data-sonner-toast][data-type="loading"] {
+  border-color: #6366f1 !important;
+}
+
+/* Toast Title */
+[data-sonner-toast] [data-title] {
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+}
+
+/* Toast Description */
+[data-sonner-toast] [data-description] {
+  color: #a1a1aa !important;
+  font-size: 0.8125rem !important;
+  margin-top: 2px !important;
+}
+
+.sonner-description {
+  color: #a1a1aa !important;
+}
+
+/* Toast Action Buttons */
+[data-sonner-toast] [data-button] {
+  background: #27272a !important;
+  color: #fff !important;
+  border: 1px solid #3f3f46 !important;
+  transition: all 0.2s !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+}
+
+[data-sonner-toast] [data-button]:hover {
+  background: #3f3f46 !important;
+  border-color: #52525b !important;
+}
+
+/* Cancel Button */
+[data-sonner-toast] [data-cancel-button] {
+  background: transparent !important;
+  color: #a1a1aa !important;
+  border: 1px solid #3f3f46 !important;
+  transition: all 0.2s !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+}
+
+[data-sonner-toast] [data-cancel-button]:hover {
+  background: #27272a !important;
+  color: #fff !important;
+  border-color: #52525b !important;
+}
+
+/* Close Button */
+[data-sonner-toast] [data-close-button] {
+  background: transparent !important;
+  color: #a1a1aa !important;
+  border: none !important;
+  transition: all 0.2s !important;
+}
+
+[data-sonner-toast] [data-close-button]:hover {
+  background: #27272a !important;
+  color: #fff !important;
+}
+
+/* Toast Container */
+[data-sonner-toaster] {
+  --normal-bg: #18181b !important;
+  --normal-border: #27272a !important;
+  --normal-text: #fff !important;
+}
+
+/* Animation improvements */
+[data-sonner-toast][data-mounted="true"] {
+  animation: slideIn 0.2s ease-out !important;
+}
+
+[data-sonner-toast][data-removed="true"] {
+  animation: slideOut 0.2s ease-in !important;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Loading spinner styling */
+[data-sonner-toast] [data-icon] svg {
+  color: inherit !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  [data-sonner-toaster] {
+    left: 1rem !important;
+    right: 1rem !important;
+    bottom: 1rem !important;
+  }
+
+  [data-sonner-toast] {
+    width: 100% !important;
   }
 }

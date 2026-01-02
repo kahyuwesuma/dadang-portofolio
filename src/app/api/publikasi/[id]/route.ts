@@ -42,16 +42,26 @@ export async function PUT(req: Request, { params }: Params) {
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const result = await deletePublikasi(params.id);
+  const { id } = await params 
 
-  if (!result.success) {
-    return NextResponse.json(
-      { error: result.error },
-      { status: 401 }
-    );
+  if (!UUID_REGEX.test(id)) {
+    return NextResponse.json({ error: 'Invalid ID' }, { status: 400 })
   }
 
-  return NextResponse.json({ success: true });
+  const { error } = await supabaseAdmin
+    .from('publikasi')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.error('Delete error:', error)
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    )
+  }
+
+  return NextResponse.json({ success: true })
 }
