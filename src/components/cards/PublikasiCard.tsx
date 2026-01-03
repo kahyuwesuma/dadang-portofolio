@@ -9,17 +9,17 @@ interface PublikasiCardProps {
 }
 
 const categoryColors = {
-  buku: 'text-emerald-400',
-  jurnal: 'text-blue-400',
-  'op-ed': 'text-purple-400',
-  press: 'text-amber-400',
+  Buku: 'text-emerald-400',
+  Jurnal: 'text-blue-400',
+  'Op-ed': 'text-purple-400',
+  Press: 'text-amber-400',
 };
 
 const categoryLabels = {
-  buku: 'Buku',
-  jurnal: 'Jurnal',
-  'op-ed': 'Op-ed',
-  press: 'Press/News',
+  Buku: 'Buku',
+  Jurnal: 'Jurnal',
+  'Op-ed': 'Op-ed',
+  Press: 'Press/News',
 };
 
 export default function PublikasiCard({ publikasi }: PublikasiCardProps) {
@@ -48,22 +48,22 @@ export default function PublikasiCard({ publikasi }: PublikasiCardProps) {
           </div>
         )}
       </div>
-      
+
       <h3 className="text-2xl font-semibold mb-3 hover:text-zinc-300 transition-colors">
         {publikasi.judul}
       </h3>
-      
+
       <div className="text-zinc-500 text-sm mb-4">
-        <span className="text-zinc-400">Penulis:</span> {publikasi.penulis} • 
+        <span className="text-zinc-400">Penulis:</span> {publikasi.penulis} •
         <span className="text-zinc-400"> Tahun:</span> {publikasi.tahun}
       </div>
-      
+
       {publikasi.deskripsi && (
         <p className="text-zinc-400 text-sm leading-relaxed mb-4">
           {publikasi.deskripsi}
         </p>
       )}
-      
+
       {publikasi.tags && publikasi.tags.length > 0 && (
         <div className="flex gap-2 flex-wrap">
           {publikasi.tags.map((tag, index) => (

@@ -138,15 +138,11 @@ export async function getCurrentAdminUser(): Promise<AdminUser | null> {
   }
 }
 
-export async function checkAdminPermission(requiredRole?: 'admin' | 'super_admin'): Promise<boolean> {
+export async function checkAdminPermission(requiredRole?: 'admin' ): Promise<boolean> {
   try {
     const adminUser = await getCurrentAdminUser();
     
     if (!adminUser || !adminUser.is_active) return false;
-    
-    if (requiredRole === 'super_admin') {
-      return adminUser.role === 'super_admin';
-    }
     
     return true; // User is admin or super_admin
   } catch (error) {

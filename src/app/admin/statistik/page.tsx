@@ -40,8 +40,8 @@ export default function StatistikPage() {
     if (!confirm(`Hapus statistik "${item.label}"?`)) return;
 
     setIsDeleting(true);
-    const adminUserId = 'temp-admin-id';
-    const result = await deleteStatistik(item.id, adminUserId);
+    const result = await deleteStatistik(item.id);
+
 
     if (result.success) {
       alert('Statistik berhasil dihapus');

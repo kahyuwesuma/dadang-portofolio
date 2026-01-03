@@ -52,9 +52,9 @@ export default function StatistikModal({ statistik, onClose }: StatistikModalPro
 
     let result;
     if (isEdit && statistik) {
-      result = await updateStatistik(statistik.id, formData, adminUserId);
+      result = await updateStatistik(statistik.id, formData);
     } else {
-      result = await createStatistik(formData, adminUserId);
+      result = await createStatistik(formData);
     }
 
     setLoading(false);
