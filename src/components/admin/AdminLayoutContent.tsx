@@ -46,7 +46,6 @@ export default function AdminLayoutContent({ children }: AdminLayoutContentProps
     { icon: BookOpen, label: 'Publikasi', href: '/admin/publikasi' },
     { icon: Heart, label: 'Pengabdian', href: '/admin/pengabdian' },
     { icon: BarChart3, label: 'Statistik', href: '/admin/statistik' },
-    { icon: Activity, label: 'Activity Log', href: '/admin/activity' },
   ]
 
   if (loading) {
@@ -82,9 +81,8 @@ export default function AdminLayoutContent({ children }: AdminLayoutContentProps
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-zinc-900 border-r border-zinc-800 z-50 transition-transform duration-300 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0`}
+        className={`fixed top-0 left-0 h-full w-64 bg-zinc-900 border-r border-zinc-800 z-50 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } lg:translate-x-0`}
       >
         <div className="flex flex-col h-full">
           <div className="p-6 border-b border-zinc-800">
@@ -104,11 +102,10 @@ export default function AdminLayoutContent({ children }: AdminLayoutContentProps
                     router.push(item.href)
                     setSidebarOpen(false)
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    isActive
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
                       ? 'bg-white text-black'
                       : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
-                  }`}
+                    }`}
                 >
                   <Icon className="w-5 h-5" />
                   <span className="font-medium">{item.label}</span>

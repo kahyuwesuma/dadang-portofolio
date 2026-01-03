@@ -13,7 +13,7 @@ export default function KontakSection() {
       icon: BookOpen,
       label: 'Google Scholar',
       value: 'Profil Akademik',
-      href: 'https://scholar.google.com',
+      href: 'https://scholar.google.com/citations?user=7c93ypcAAAAJ&hl=id',
     },
     {
       icon: Briefcase,
@@ -32,7 +32,7 @@ export default function KontakSection() {
             Tertarik untuk berkolaborasi dalam penelitian, penulisan, atau proyek pengabdian
             masyarakat? Hubungi saya melalui kontak di bawah ini.
           </p>
-          
+
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             {contacts.map((contact) => {
               const Icon = contact.icon;

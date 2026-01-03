@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase/admin'
+import { createClient } from '@/lib/supabase/admin'
 
 type Params = {
   params: Promise<{ id: string }>
@@ -16,25 +16,20 @@ export async function GET(
   { params }: Params
 ) {
   const { id } = await params
-
   if (!UUID_REGEX.test(id)) {
-    return NextResponse.json(
-      { error: 'Invalid ID' },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: 'Invalid ID' }, { status: 400 })
   }
 
-  const { data, error } = await supabaseAdmin
+  const supabase = createClient() // ✅ WAJIB
+
+  const { data, error } = await supabase
     .from('pengabdian')
     .select('*')
     .eq('id', id)
     .single()
 
   if (error) {
-    return NextResponse.json(
-      { error: error.message },
-      { status: 404 }
-    )
+    return NextResponse.json({ error: error.message }, { status: 404 })
   }
 
   return NextResponse.json(data)
@@ -48,17 +43,14 @@ export async function PUT(
   { params }: Params
 ) {
   const { id } = await params
-
   if (!UUID_REGEX.test(id)) {
-    return NextResponse.json(
-      { error: 'Invalid ID' },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: 'Invalid ID' }, { status: 400 })
   }
 
   const body = await req.json()
+  const supabase = createClient() // ✅ WAJIB
 
-  const { error } = await supabaseAdmin
+  const { error } = await supabase
     .from('pengabdian')
     .update({
       judul: body.judul,
@@ -74,10 +66,7 @@ export async function PUT(
     .eq('id', id)
 
   if (error) {
-    return NextResponse.json(
-      { error: error.message },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: error.message }, { status: 400 })
   }
 
   return NextResponse.json({ success: true })
@@ -91,24 +80,19 @@ export async function DELETE(
   { params }: Params
 ) {
   const { id } = await params
-
   if (!UUID_REGEX.test(id)) {
-    return NextResponse.json(
-      { error: 'Invalid ID' },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: 'Invalid ID' }, { status: 400 })
   }
 
-  const { error } = await supabaseAdmin
+  const supabase = createClient() // ✅ WAJIB
+
+  const { error } = await supabase
     .from('pengabdian')
     .delete()
     .eq('id', id)
 
   if (error) {
-    return NextResponse.json(
-      { error: error.message },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: error.message }, { status: 400 })
   }
 
   return NextResponse.json({ success: true })

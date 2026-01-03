@@ -15,11 +15,14 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
   const [activeFilter, setActiveFilter] = useState<FilterKategori>('all');
 
   const filteredPublikasi = useMemo(() => {
+    const searchLower = searchTerm.toLowerCase();
+
     return publikasi.filter((pub) => {
-      
-      const matchesFilter = activeFilter === 'all' || pub.kategori === activeFilter;
-      
-      const searchLower = searchTerm.toLowerCase();
+      const kategoriNormalized = pub.kategori?.toLowerCase();
+
+      const matchesFilter =
+        activeFilter === 'all' || kategoriNormalized === activeFilter;
+
       const matchesSearch =
         searchTerm === '' ||
         pub.judul.toLowerCase().includes(searchLower) ||
@@ -29,6 +32,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
       return matchesFilter && matchesSearch;
     });
   }, [publikasi, searchTerm, activeFilter]);
+
 
   const filterButtons = [
     { label: 'Semua', filter: 'all' as FilterKategori },
@@ -55,7 +59,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
             onChange={setSearchTerm}
             placeholder="Cari berdasarkan judul, author, atau kata kunci..."
           />
-          
+
           <div className="flex gap-3 flex-wrap">
             {filterButtons.map((button) => (
               <FilterButton
@@ -67,12 +71,12 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
               />
             ))}
           </div>
-          
+
           <div className="text-sm text-zinc-500">
             Menampilkan <span id="resultCount">{filteredPublikasi.length}</span> publikasi
           </div>
         </div>
-        
+
         {/* Publications List */}
         <div className="space-y-6" id="publikasiList">
           {filteredPublikasi.length > 0 ? (

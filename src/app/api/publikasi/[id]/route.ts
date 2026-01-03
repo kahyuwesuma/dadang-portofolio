@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase/admin'
-import { deletePublikasi } from '@/lib/admin-supabase';
-
+import { createClient } from '@/lib/supabase/admin';
 
 type Params = {
   params: Promise<{ id: string }>
@@ -12,7 +10,7 @@ const UUID_REGEX =
 
 export async function PUT(req: Request, { params }: Params) {
   const { id } = await params // ✅ WAJIB
-
+  const supabaseAdmin = createClient();
   if (!UUID_REGEX.test(id)) {
     return NextResponse.json({ error: 'Invalid ID' }, { status: 400 })
   }
@@ -44,13 +42,14 @@ export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params 
+  const { id } = await params
 
   if (!UUID_REGEX.test(id)) {
     return NextResponse.json({ error: 'Invalid ID' }, { status: 400 })
   }
 
-  const { error } = await supabaseAdmin
+  const supabase = createClient()
+  const { error } = await supabase
     .from('publikasi')
     .delete()
     .eq('id', id)

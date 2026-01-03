@@ -1,14 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BookOpen, Heart, BarChart3, Activity } from 'lucide-react';
+import { BookOpen, Heart, FileText, Newspaper, Users, TrendingUp, Calendar, CheckCircle } from 'lucide-react';
+import { toast } from 'sonner';
 import { StatCard } from '@/components/admin/StatCard';
-import { getDashboardStats, getRecentActivities } from '@/lib/admin-supabase';
-import type { DashboardStats, ActivityLog } from '@/lib/admin-types';
+import { getDashboardStats } from '@/lib/admin-supabase';
+import type { DashboardStats } from '@/lib/admin-types';
+import Link from 'next/link';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [activities, setActivities] = useState<ActivityLog[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,33 +18,39 @@ export default function AdminDashboard() {
 
   const loadData = async () => {
     setLoading(true);
-    const [statsData, activitiesData] = await Promise.all([
-      getDashboardStats(),
-      getRecentActivities(10),
-    ]);
-    setStats(statsData);
-    setActivities(activitiesData);
-    setLoading(false);
+    try {
+      const statsData = await getDashboardStats();
+      setStats(statsData);
+    } catch (error) {
+      toast.error('Gagal memuat data dashboard', {
+        description: 'Terjadi kesalahan saat memuat data.',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-zinc-400">Loading...</div>
+      <div className="flex items-center justify-center h-screen">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+          <div className="text-zinc-400">Memuat dashboard...</div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-[1400px]">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-        <p className="text-zinc-400">Selamat datang di Admin Panel</p>
+        <h1 className="text-3xl font-bold text-white mb-1">Dashboard</h1>
+        <p className="text-zinc-400 text-sm">Overview & Statistics</p>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Main Stats Grid - 4 Columns */}
+      <div className="grid grid-cols-4 gap-4">
         <StatCard
           title="Total Publikasi"
           value={stats?.total_publikasi || 0}
@@ -57,107 +64,129 @@ export default function AdminDashboard() {
           color="green"
         />
         <StatCard
-          title="Buku Diterbitkan"
+          title="Buku"
           value={stats?.total_buku || 0}
           icon={BookOpen}
           color="purple"
         />
         <StatCard
-          title="Activity This Week"
-          value={stats?.activities_this_week || 0}
-          icon={Activity}
-          color="amber"
+          title="Jurnal"
+          value={stats?.total_jurnal || 0}
+          icon={FileText}
         />
       </div>
 
-      {/* Detailed Stats */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Detailed Grid - 2 Columns */}
+      <div className="grid grid-cols-2 gap-4">
         {/* Publikasi Breakdown */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-          <h2 className="text-xl font-bold text-white mb-4">Publikasi by Category</h2>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-400">Buku</span>
-              <span className="text-white font-medium">{stats?.total_buku || 0}</span>
+        <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-5 hover:border-zinc-700 transition-colors">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-white">Publikasi by Category</h2>
+            <Link 
+              href="/admin/publikasi"
+              className="text-xs text-zinc-400 hover:text-white transition-colors"
+            >
+              Manage →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg hover:bg-zinc-800 transition-colors">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                <span className="text-zinc-300 text-sm">Buku</span>
+              </div>
+              <span className="text-white font-semibold">{stats?.total_buku || 0}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-400">Jurnal</span>
-              <span className="text-white font-medium">{stats?.total_jurnal || 0}</span>
+            <div className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg hover:bg-zinc-800 transition-colors">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-blue-400"></div>
+                <span className="text-zinc-300 text-sm">Jurnal</span>
+              </div>
+              <span className="text-white font-semibold">{stats?.total_jurnal || 0}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-400">Op-ed</span>
-              <span className="text-white font-medium">{stats?.total_oped || 0}</span>
+            <div className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg hover:bg-zinc-800 transition-colors">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-purple-400"></div>
+                <span className="text-zinc-300 text-sm">Op-ed</span>
+              </div>
+              <span className="text-white font-semibold">{stats?.total_oped || 0}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-400">Press/News</span>
-              <span className="text-white font-medium">{stats?.total_press || 0}</span>
+            <div className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg hover:bg-zinc-800 transition-colors">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-amber-400"></div>
+                <span className="text-zinc-300 text-sm">Press/News</span>
+              </div>
+              <span className="text-white font-semibold">{stats?.total_press || 0}</span>
             </div>
           </div>
         </div>
 
         {/* Pengabdian Status */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-          <h2 className="text-xl font-bold text-white mb-4">Pengabdian Status</h2>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-400">Selesai</span>
-              <span className="text-green-400 font-medium">
-                {stats?.pengabdian_selesai || 0}
-              </span>
+        <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-5 hover:border-zinc-700 transition-colors">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-white">Pengabdian Status</h2>
+            <Link 
+              href="/admin/pengabdian"
+              className="text-xs text-zinc-400 hover:text-white transition-colors"
+            >
+              Manage →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg hover:bg-zinc-800 transition-colors">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span className="text-zinc-300 text-sm">Selesai</span>
+              </div>
+              <span className="text-green-400 font-semibold">{stats?.pengabdian_selesai || 0}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-400">Ongoing</span>
-              <span className="text-blue-400 font-medium">
-                {stats?.pengabdian_ongoing || 0}
-              </span>
+            <div className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg hover:bg-zinc-800 transition-colors">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-blue-400" />
+                <span className="text-zinc-300 text-sm">Berjalan</span>
+              </div>
+              <span className="text-blue-400 font-semibold">{stats?.pengabdian_ongoing || 0}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-400">Total</span>
-              <span className="text-white font-medium">{stats?.total_pengabdian || 0}</span>
+            <div className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg hover:bg-zinc-800 transition-colors">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-amber-400" />
+                <span className="text-zinc-300 text-sm">Planned</span>
+              </div>
+              <span className="text-amber-400 font-semibold">{stats?.pengabdian_planned || 0}</span>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-zinc-800 to-zinc-800/50 rounded-lg border border-zinc-700">
+              <div className="flex items-center gap-2">
+                <Heart className="w-4 h-4 text-white" />
+                <span className="text-white font-medium text-sm">Total</span>
+              </div>
+              <span className="text-white font-bold text-lg">{stats?.total_pengabdian || 0}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Recent Activities */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-        <h2 className="text-xl font-bold text-white mb-4">Recent Activities</h2>
-        {activities.length > 0 ? (
-          <div className="space-y-3">
-            {activities.map((activity) => (
-              <div
-                key={activity.id}
-                className="flex items-center justify-between py-3 border-b border-zinc-800 last:border-0"
-              >
-                <div>
-                  <p className="text-white font-medium">
-                    {activity.admin_name || 'Unknown'}{' '}
-                    <span className="text-zinc-400">
-                      {activity.action.toLowerCase()}d{' '}
-                    </span>
-                    <span className="text-white">{activity.table_name}</span>
-                  </p>
-                  <p className="text-sm text-zinc-500 mt-1">
-                    {new Date(activity.created_at).toLocaleString('id-ID')}
-                  </p>
-                </div>
-                <div
-                  className={`px-2 py-1 rounded text-xs font-medium ${
-                    activity.action === 'CREATE'
-                      ? 'bg-green-500/20 text-green-400'
-                      : activity.action === 'UPDATE'
-                      ? 'bg-blue-500/20 text-blue-400'
-                      : 'bg-red-500/20 text-red-400'
-                  }`}
-                >
-                  {activity.action}
-                </div>
-              </div>
-            ))}
+ 
+      {/* Summary Stats Row */}
+      <div className="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-900 border border-zinc-800 rounded-lg p-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-zinc-400 text-sm mb-1">Total Output Akademik</p>
+            <p className="text-4xl font-bold text-white">
+              {(stats?.total_publikasi || 0) + (stats?.total_pengabdian || 0)}
+            </p>
           </div>
-        ) : (
-          <p className="text-zinc-500 text-center py-8">No recent activities</p>
-        )}
+          <div className="flex gap-8">
+            <div className="text-right">
+              <p className="text-zinc-400 text-xs mb-1">Publikasi</p>
+              <p className="text-2xl font-bold text-blue-400">{stats?.total_publikasi || 0}</p>
+            </div>
+            <div className="h-12 w-px bg-zinc-800"></div>
+            <div className="text-right">
+              <p className="text-zinc-400 text-xs mb-1">Pengabdian</p>
+              <p className="text-2xl font-bold text-green-400">{stats?.total_pengabdian || 0}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

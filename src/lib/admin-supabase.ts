@@ -1,7 +1,7 @@
-// src/lib/admin-supabase.ts (UPDATED VERSION)
-
 import { supabase } from './supabase';
 import { getCurrentAdminUser } from './supabase-auth';
+import { createClient } from '@/lib/supabase/admin';
+
 import type {
   AdminUser,
   ActivityLog,
@@ -25,31 +25,10 @@ async function getAdminUserId(): Promise<string | null> {
 // Dashboard Functions
 // ============================================
 
-export async function getDashboardStats(): Promise<DashboardStats | null> {
-  const { data, error } = await supabase
-    .from('v_admin_dashboard_stats')
-    .select('*')
-    .single();
-
-  if (error) {
-    console.error('Error fetching dashboard stats:', error);
-    return null;
-  }
-
-  return data as DashboardStats;
-}
-
-export async function getRecentActivities(limit: number = 10): Promise<ActivityLog[]> {
-  const { data, error } = await supabase.rpc('get_recent_activities', {
-    limit_count: limit,
-  });
-
-  if (error) {
-    console.error('Error fetching recent activities:', error);
-    return [];
-  }
-
-  return data as ActivityLog[];
+export async function getDashboardStats(): Promise<DashboardStats> {
+  const res = await fetch('/api/dashboard');
+  if (!res.ok) throw new Error('Failed to fetch dashboard stats');
+  return res.json();
 }
 
 // ============================================
