@@ -85,7 +85,7 @@ export const PUBLIKASI_KATEGORI: Array<{ value: PublikasiKategori; label: string
   { value: 'Buku', label: 'Buku' },
   { value: 'Jurnal', label: 'Jurnal' },
   { value: 'Op-ed', label: 'Op-ed' },
-  { value: 'Press', label: 'Press/News' },
+  { value: 'Press/News', label: 'Press/News' },
 ];
 
 export function getKategoriLabel(kategori: PublikasiKategori): string {
@@ -98,7 +98,7 @@ export function getKategoriColor(kategori: PublikasiKategori): string {
     'Buku': 'bg-emerald-500/20 text-emerald-400',
     'Jurnal': 'bg-blue-500/20 text-blue-400',
     'Op-ed': 'bg-purple-500/20 text-purple-400',
-    'Press': 'bg-amber-500/20 text-amber-400',
+    'Press/News': 'bg-amber-500/20 text-amber-400',
   };
   return colors[kategori] || 'bg-zinc-500/20 text-zinc-400';
 }
