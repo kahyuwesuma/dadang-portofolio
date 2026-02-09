@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BookOpen, Heart, FileText, Newspaper, Users, TrendingUp, Calendar, CheckCircle } from 'lucide-react';
+import { BookOpen, Heart, FileText, Newspaper, Users, TrendingUp, Calendar, CheckCircle, KeyRound } from 'lucide-react';
 import { toast } from 'sonner';
 import { StatCard } from '@/components/admin/StatCard';
 import { getDashboardStats } from '@/lib/admin-supabase';
@@ -49,6 +49,22 @@ export default function AdminDashboard() {
         <p className="text-zinc-400 text-sm">Overview & Statistics</p>
       </div>
 
+      {/* Quick Actions */}
+      <div className="flex gap-4">
+        <Link
+          href="/admin/password"
+          className="flex items-center gap-3 px-5 py-4 bg-zinc-900 border border-zinc-800 rounded-lg hover:border-zinc-700 transition-colors"
+        >
+          <div className="p-2 bg-zinc-800 rounded-md">
+            <KeyRound className="w-5 h-5 text-amber-400" />
+          </div>
+          <div>
+            <p className="text-white font-medium text-sm">Ganti Password</p>
+            <p className="text-zinc-400 text-xs">Keamanan akun admin</p>
+          </div>
+        </Link>
+      </div>
+
       {/* Main Stats Grid - 4 Columns */}
       <div className="grid grid-cols-4 gap-4">
         <StatCard
@@ -82,7 +98,7 @@ export default function AdminDashboard() {
         <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-5 hover:border-zinc-700 transition-colors">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-white">Publikasi by Category</h2>
-            <Link 
+            <Link
               href="/admin/publikasi"
               className="text-xs text-zinc-400 hover:text-white transition-colors"
             >
@@ -125,7 +141,7 @@ export default function AdminDashboard() {
         <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-5 hover:border-zinc-700 transition-colors">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-white">Pengabdian Status</h2>
-            <Link 
+            <Link
               href="/admin/pengabdian"
               className="text-xs text-zinc-400 hover:text-white transition-colors"
             >
@@ -165,7 +181,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
- 
+
       {/* Summary Stats Row */}
       <div className="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-900 border border-zinc-800 rounded-lg p-5">
         <div className="flex items-center justify-between">
@@ -188,6 +204,8 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+
+
     </div>
   );
 }

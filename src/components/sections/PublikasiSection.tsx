@@ -10,6 +10,27 @@ interface PublikasiSectionProps {
   publikasi: Publikasi[];
 }
 
+// Normalize function to handle any case from database
+function normalizeKategori(kategori: string | undefined): string {
+  if (!kategori) return '';
+  const lower = kategori.toLowerCase().trim();
+  
+  // Map variations to standard values
+  const mapping: Record<string, string> = {
+    'buku': 'buku',
+    'book': 'buku',
+    'jurnal': 'jurnal',
+    'journal': 'jurnal',
+    'op-ed': 'op-ed',
+    'oped': 'op-ed',
+    'press': 'press',
+    'press/news': 'press',
+    'news': 'press',
+  };
+  
+  return mapping[lower] || lower;
+}
+
 export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterKategori>('all');
@@ -18,21 +39,24 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
     const searchLower = searchTerm.toLowerCase();
 
     return publikasi.filter((pub) => {
-      const kategoriNormalized = pub.kategori?.toLowerCase();
+      // Normalize kategori from database
+      const kategoriNormalized = normalizeKategori(pub.kategori);
 
+      // Check filter match
       const matchesFilter =
         activeFilter === 'all' || kategoriNormalized === activeFilter;
 
+      // Check search match
       const matchesSearch =
         searchTerm === '' ||
         pub.judul.toLowerCase().includes(searchLower) ||
         pub.penulis.toLowerCase().includes(searchLower) ||
-        pub.keywords?.toLowerCase().includes(searchLower);
+        (pub.keywords && pub.keywords.toLowerCase().includes(searchLower)) ||
+        (pub.deskripsi && pub.deskripsi.toLowerCase().includes(searchLower));
 
       return matchesFilter && matchesSearch;
     });
   }, [publikasi, searchTerm, activeFilter]);
-
 
   const filterButtons = [
     { label: 'Semua', filter: 'all' as FilterKategori },

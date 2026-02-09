@@ -1,9 +1,9 @@
-export type PublikasiKategori = 'Buku' | 'Jurnal' | 'Op-ed' | 'Press';
+export type PublikasiKategori = 'Buku' | 'Jurnal' | 'Op-ed' | 'Press/News';
 
 export interface Publikasi {
   id: string;
   judul: string;
-  kategori: PublikasiKategori; 
+  kategori: PublikasiKategori;
   penulis: string;
   tahun: number;
   deskripsi?: string;
