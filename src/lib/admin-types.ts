@@ -96,11 +96,11 @@ export function getKategoriLabel(kategori: PublikasiKategori): string {
 
 export function getKategoriColor(kategori: PublikasiKategori): string {
   const colors: Record<PublikasiKategori, string> = {
-    'Theses': 'bg-cyan-500/20 text-cyan-400',
-    'Books': 'bg-emerald-500/20 text-emerald-400',
-    'Journals': 'bg-blue-500/20 text-blue-400',
-    'Op-eds': 'bg-purple-500/20 text-purple-400',
+    'Jurnal': 'bg-blue-500/20 text-blue-400',
+    'Buku': 'bg-emerald-500/20 text-emerald-400',
+    'Op-ed': 'bg-purple-500/20 text-purple-400',
     'Media Appearance': 'bg-amber-500/20 text-amber-400',
+    'Theses': 'bg-cyan-500/20 text-cyan-400',
   };
 
   return colors[kategori] || 'bg-zinc-500/20 text-zinc-400';
