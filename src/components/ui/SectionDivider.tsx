@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
-export default function SectionDivider() {
-  return <div className="section-line max-w-7xl mx-auto" />;
-}
+const SectionDivider = forwardRef<HTMLDivElement>((props, ref) => {
+  return <div ref={ref} className="section-line max-w-7xl mx-auto" />;
+});
+
+SectionDivider.displayName = 'SectionDivider';
+
+export default SectionDivider;

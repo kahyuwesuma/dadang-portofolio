@@ -4,166 +4,104 @@ import Image from 'next/image';
 
 export default function HeroSection() {
     return (
-        <section id="profil" className="relative h-screen flex items-center overflow-hidden bg-black">
-            {/* Left Half: Image with Gradient Overlay */}
-            <div className="absolute inset-0 w-1/2 left-0">
-                {/* Dummy Image */}
-                <div className="w-full h-full relative">
-                    {/* Sophisticated gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 via-zinc-900 to-black">
-                        {/* Subtle pattern overlay */}
-                        <div className="absolute inset-0 opacity-[0.03]"
-                            style={{
-                                backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
-                                backgroundSize: '50px 50px'
-                            }}
-                        />
-                    </div>
+        <section id="profil" className="relative w-full overflow-hidden" style={{ height: '100vh', minHeight: '620px' }}>
 
-                    {/* Portrait silhouette */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="relative">
-                            {/* Large circular avatar */}
-                            <div className="w-96 h-96 rounded-full bg-gradient-to-br from-zinc-700/50 to-zinc-800/50 backdrop-blur-sm flex items-center justify-center border border-zinc-600/20 relative overflow-hidden">
-                                {/* Animated rings */}
-                                <div className="absolute inset-0 rounded-full border-2 border-white/5 animate-[spin_20s_linear_infinite]" />
-                                <div className="absolute inset-8 rounded-full border border-white/5 animate-[spin_15s_linear_infinite_reverse]" />
+            {/* ── Navigation ── */}
+            <nav className="absolute top-0 right-0 z-50 flex items-center gap-8 px-10 py-5"
+                style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.45), transparent)' }}
+            >
+                {['Theses', 'Books', 'Journals', 'Op-eds', 'Media Appearance'].map((item) => (
+                    <a
+                        key={item}
+                        href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
+                        className="text-white/80 hover:text-white transition-colors duration-200"
+                        style={{
+                            fontFamily: 'var(--font-sans, sans-serif)',
+                            fontSize: '0.75rem',
+                            fontWeight: 500,
+                            letterSpacing: '0.08em',
+                            textDecoration: 'none',
+                            textTransform: 'uppercase',
+                        }}
+                    >
+                        {item}
+                    </a>
+                ))}
+            </nav>
 
-                                <Image
-                                    src="/images/profile.png"
-                                    alt="Profile photo"
-                                    fill
-                                    className="object-cover rounded-full"
-                                />
+            {/* ── Full-width Photo ── */}
+            <div className="absolute inset-0">
+                <Image
+                    src="/images/profile.png"
+                    alt="Dr. Dadang I K Mujiono"
+                    fill
+                    priority
+                    className="object-cover"
+                    style={{ objectPosition: 'center 18%' }}
+                />
 
-                            </div>
-
-                            {/* Floating orbs */}
-                            <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-white/5 blur-3xl animate-pulse" />
-                            <div className="absolute -bottom-20 -left-20 w-32 h-32 rounded-full bg-white/5 blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Gradient fade to right */}
-                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-r from-transparent to-black" />
+                {/* Gradient — light on top, heavy at bottom like the Word design */}
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        background: `linear-gradient(
+                            to bottom,
+                            rgba(0,0,0,0.10)  0%,
+                            rgba(0,0,0,0.02) 30%,
+                            rgba(0,0,0,0.15) 55%,
+                            rgba(0,0,0,0.65) 78%,
+                            rgba(0,0,0,0.82) 100%
+                        )`,
+                    }}
+                />
             </div>
 
-            {/* Right Half: Content with Fade-in Effect */}
-            <div className="relative w-full h-full flex items-center">
-                <div className="w-1/2 ml-auto px-12 lg:px-16 xl:px-20">
-                    {/* Animated line */}
-                    <div className="flex items-center gap-4 mb-8 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards]">
-                        <div className="h-px w-16 bg-gradient-to-r from-white/60 to-transparent" />
-                        <span className="text-zinc-500 text-xs tracking-[0.3em] uppercase font-light">
-                            Academic and Conservationist
-                        </span>
-                    </div>
+            {/* ── Name & Title — bottom center ── */}
+            <div
+                className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center text-center"
+                style={{
+                    paddingBottom: '3.2rem',
+                    animation: 'heroFadeUp 1.2s cubic-bezier(0.16,1,0.3,1) 0.2s both',
+                }}
+            >
+                <h1
+                    style={{
+                        fontFamily: '"Dancing Script", cursive',
+                        fontWeight: 600,
+                        fontSize: 'clamp(2.8rem, 6vw, 5rem)',
+                        color: '#ffffff',
+                        letterSpacing: '0.01em',
+                        lineHeight: 1.1,
+                        marginBottom: '0.45rem',
+                        textShadow: '0 2px 24px rgba(0,0,0,0.5)',
+                    }}
+                >
+                    Dr. Dadang I K Mujiono
+                </h1>
 
-                    {/* Name with staggered animation */}
-                    <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-[1.1] opacity-0 animate-[fadeInUp_0.8s_ease-out_0.4s_forwards]">
-                        <span className="block bg-gradient-to-r from-white via-white to-zinc-400 bg-clip-text text-transparent">
-                            Dr. Dadang
-                        </span>
-                        <span className="block bg-gradient-to-r from-white via-white to-zinc-400 bg-clip-text text-transparent">
-                            I K Mujiono
-                        </span>
-                    </h1>
-
-                    {/* Description with fade */}
-                    <div className="space-y-4 mb-8 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.6s_forwards]">
-                        <p className="text-zinc-400 text-base lg:text-lg leading-relaxed max-w-xl">
-                            Researcher and lecturer specializing in{' '}
-                            <span className="text-white font-medium relative inline-block">
-                                maritime governance
-                                <span className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-white/60 to-transparent" />
-                            </span>
-                            ,{' '}
-                            <span className="text-white font-medium relative inline-block">
-                                eco-tourism
-                                <span className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-white/60 to-transparent" />
-                            </span>
-                            , and socio-political dynamics of coastal communities in Indonesia.
-                        </p>
-                    </div>
-
-                    {/* Key achievements - minimal design */}
-                    <div className="space-y-3 mb-10 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.8s_forwards]">
-                        <div className="flex items-start gap-4 group">
-                            <div className="w-1 h-1 rounded-full bg-white mt-2.5 group-hover:scale-150 transition-transform" />
-                            <p className="text-zinc-300 text-sm lg:text-base">
-                                <span className="text-white font-semibold">Ph.D.</span> from National University of Singapore
-                            </p>
-                        </div>
-                        <div className="flex items-start gap-4 group">
-                            <div className="w-1 h-1 rounded-full bg-white mt-2.5 group-hover:scale-150 transition-transform" />
-                            <p className="text-zinc-300 text-sm lg:text-base">
-                                Director of Indonesia at <span className="text-white font-semibold">Global Conservation</span>
-                            </p>
-                        </div>
-                        <div className="flex items-start gap-4 group">
-                            <div className="w-1 h-1 rounded-full bg-white mt-2.5 group-hover:scale-150 transition-transform" />
-                            <p className="text-zinc-300 text-sm lg:text-base">
-                                Chairman of <span className="text-white font-semibold">Yayasan Laut Biru Kepulauan Derawan</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* CTA Buttons - minimal & elegant */}
-                    <div className="flex gap-4 opacity-0 animate-[fadeInUp_0.8s_ease-out_1s_forwards]">
-                        <a
-                            href="#publikasi"
-                            className="group relative px-8 py-3.5 overflow-hidden"
-                        >
-                            <div className="absolute inset-0 bg-white transition-transform group-hover:scale-105" />
-                            <span className="relative text-black font-medium text-sm tracking-wide">
-                                View Publications
-                            </span>
-                        </a>
-                        <a
-                            href="#kontak"
-                            className="group relative px-8 py-3.5 overflow-hidden border border-white/20"
-                        >
-                            <div className="absolute inset-0 bg-white/0 transition-all group-hover:bg-white/10" />
-                            <span className="relative text-white font-medium text-sm tracking-wide">
-                                Contact
-                            </span>
-                        </a>
-                    </div>
-                </div>
+                <p
+                    style={{
+                        fontFamily: 'var(--font-sans, sans-serif)',
+                        fontWeight: 300,
+                        fontSize: '0.82rem',
+                        letterSpacing: '0.2em',
+                        textTransform: 'uppercase',
+                        color: 'rgba(255,255,255,0.72)',
+                    }}
+                >
+                    Academic &nbsp;|&nbsp; Conservationist
+                </p>
             </div>
 
-            {/* Scroll indicator */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0 animate-[fadeIn_0.8s_ease-out_1.5s_forwards]">
-                <div className="flex flex-col items-center gap-2">
-                    <span className="text-zinc-600 text-xs tracking-widest">SCROLL</span>
-                    <svg className="w-5 h-5 text-zinc-600 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                    </svg>
-                </div>
-            </div>
+            {/* ── Google Font import + keyframe ── */}
+            <style jsx global>{`
+                @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
 
-            <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-      `}</style>
+                @keyframes heroFadeUp {
+                    from { opacity: 0; transform: translateY(18px); }
+                    to   { opacity: 1; transform: translateY(0); }
+                }
+            `}</style>
         </section>
     );
 }

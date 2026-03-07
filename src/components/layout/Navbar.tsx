@@ -50,7 +50,6 @@ export default function Navbar() {
                 }`}
         >
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex justify-between items-center">
-                <div className="text-xl font-bold tracking-tight">Dr. Dadang</div>
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex gap-8 text-sm text-zinc-400">
