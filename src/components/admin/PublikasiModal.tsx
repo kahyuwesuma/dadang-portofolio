@@ -178,10 +178,11 @@ export default function PublikasiModal({ publikasi, onClose }: PublikasiModalPro
                 className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white/20"
                 required
               >
+                <option value="Theses">Theses</option>
                 <option value="Buku">Buku</option>
                 <option value="Jurnal">Jurnal</option>
                 <option value="Op-ed">Op-ed</option>
-                <option value="Press/News">Press/News</option>
+                <option value="Media Appearance">Media Appearance</option>
               </select>
             </div>
 

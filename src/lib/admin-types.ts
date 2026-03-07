@@ -81,11 +81,12 @@ export interface AuthSession {
 
 export type TableName = 'publikasi' | 'pengabdian' | 'statistik' | 'publikasi_tags';
 
-export const PUBLIKASI_KATEGORI: Array<{ value: PublikasiKategori; label: string }> = [
-  { value: 'Buku', label: 'Buku' },
+export const PUBLIKASI_KATEGORI = [
   { value: 'Jurnal', label: 'Jurnal' },
+  { value: 'Buku', label: 'Buku' },
   { value: 'Op-ed', label: 'Op-ed' },
-  { value: 'Press/News', label: 'Press/News' },
+  { value: 'Media Appearance', label: 'Media Appearance' },
+  { value: 'Theses', label: 'Theses' },
 ];
 
 export function getKategoriLabel(kategori: PublikasiKategori): string {
@@ -95,14 +96,22 @@ export function getKategoriLabel(kategori: PublikasiKategori): string {
 
 export function getKategoriColor(kategori: PublikasiKategori): string {
   const colors: Record<PublikasiKategori, string> = {
-    'Buku': 'bg-emerald-500/20 text-emerald-400',
-    'Jurnal': 'bg-blue-500/20 text-blue-400',
-    'Op-ed': 'bg-purple-500/20 text-purple-400',
-    'Press/News': 'bg-amber-500/20 text-amber-400',
+    'Theses': 'bg-cyan-500/20 text-cyan-400',
+    'Books': 'bg-emerald-500/20 text-emerald-400',
+    'Journals': 'bg-blue-500/20 text-blue-400',
+    'Op-eds': 'bg-purple-500/20 text-purple-400',
+    'Media Appearance': 'bg-amber-500/20 text-amber-400',
   };
+
   return colors[kategori] || 'bg-zinc-500/20 text-zinc-400';
 }
 
 export function isValidKategori(value: string): value is PublikasiKategori {
-  return ['buku', 'jurnal', 'op-ed', 'press'].includes(value);
+  return [
+    'Theses',
+    'Books',
+    'Journals',
+    'Op-eds',
+    'Media Appearance'
+  ].includes(value);
 }

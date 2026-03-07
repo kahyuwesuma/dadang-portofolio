@@ -6,59 +6,58 @@ import { Menu, X } from 'lucide-react';
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [activeSection, setActiveSection] = useState('profil');
 
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 50);
-
-            const sections = ['profil', 'publikasi', 'pengabdian', 'kontak'];
-            for (const section of sections) {
-                const element = document.getElementById(section);
-                if (element) {
-                    const rect = element.getBoundingClientRect();
-                    if (rect.top <= 200 && rect.bottom >= 200) {
-                        setActiveSection(section);
-                        break;
-                    }
-                }
-            }
         };
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const handleLinkClick = (sectionId: string) => {
+    const handleLinkClick = () => {
         setIsMobileMenuOpen(false);
-        const element = document.getElementById(sectionId);
+        const element = document.getElementById('publikasi');
         if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     };
 
     const navLinks = [
-        { id: 'profil', label: 'Profil' },
-        { id: 'publikasi', label: 'Publikasi' },
-        { id: 'pengabdian', label: 'Pengabdian' },
-        { id: 'kontak', label: 'Kontak' },
+        { label: 'Theses' },
+        { label: 'Books' },
+        { label: 'Journals' },
+        { label: 'Op-eds' },
+        { label: 'Media Appearance' },
     ];
 
     return (
         <nav
-            className={`fixed top-0 w-full backdrop-blur-lg z-50 transition-all duration-300 ${isScrolled ? 'nav-scrolled' : ''
-                }`}
+            className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+                isScrolled ? 'nav-scrolled backdrop-blur-lg' : ''
+            }`}
         >
-            <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex justify-end items-center">
 
                 {/* Desktop Menu */}
-                <div className="hidden md:flex gap-8 text-sm text-zinc-400">
+                <div className="hidden md:flex items-center gap-8">
                     {navLinks.map((link) => (
                         <button
-                            key={link.id}
-                            onClick={() => handleLinkClick(link.id)}
-                            className={`nav-link hover:text-white ${activeSection === link.id ? 'active' : ''
-                                }`}
+                            key={link.label}
+                            onClick={handleLinkClick}
+                            className="nav-link text-white/75 hover:text-white transition-colors duration-200"
+                            style={{
+                                fontFamily: 'var(--font-sans, sans-serif)',
+                                fontSize: '0.75rem',
+                                fontWeight: 500,
+                                letterSpacing: '0.08em',
+                                textTransform: 'uppercase',
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                padding: 0,
+                            }}
                         >
                             {link.label}
                         </button>
@@ -82,12 +81,23 @@ export default function Navbar() {
             {/* Mobile Menu */}
             {isMobileMenuOpen && (
                 <div className="md:hidden bg-black border-t border-zinc-800">
-                    <div className="px-6 py-4 flex flex-col gap-4 text-sm text-zinc-400">
+                    <div className="px-6 py-4 flex flex-col gap-4">
                         {navLinks.map((link) => (
                             <button
-                                key={link.id}
-                                onClick={() => handleLinkClick(link.id)}
-                                className="text-left hover:text-white transition-colors"
+                                key={link.label}
+                                onClick={handleLinkClick}
+                                className="text-left text-zinc-400 hover:text-white transition-colors duration-200"
+                                style={{
+                                    fontFamily: 'var(--font-sans, sans-serif)',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 500,
+                                    letterSpacing: '0.08em',
+                                    textTransform: 'uppercase',
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    padding: 0,
+                                }}
                             >
                                 {link.label}
                             </button>

@@ -1,4 +1,9 @@
-export type PublikasiKategori = 'Buku' | 'Jurnal' | 'Op-ed' | 'Press/News';
+export type PublikasiKategori =
+  | 'Jurnal'
+  | 'Buku'
+  | 'Op-ed'
+  | 'Media Appearance'
+  | 'Theses';
 
 export interface Publikasi {
   id: string;
@@ -39,7 +44,13 @@ export interface Statistik {
   updated_at?: string;
 }
 
-export type FilterKategori = 'all' | PublikasiKategori;
+export type FilterKategori =
+  | 'all'
+  | 'theses'
+  | 'books'
+  | 'journals'
+  | 'opeds'
+  | 'media';
 
 export interface CategoryBadgeProps {
   kategori: PublikasiKategori;

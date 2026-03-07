@@ -74,12 +74,6 @@ export default function AdminDashboard() {
           color="blue"
         />
         <StatCard
-          title="Total Pengabdian"
-          value={stats?.total_pengabdian || 0}
-          icon={Heart}
-          color="green"
-        />
-        <StatCard
           title="Buku"
           value={stats?.total_buku || 0}
           icon={BookOpen}
@@ -90,6 +84,7 @@ export default function AdminDashboard() {
           value={stats?.total_jurnal || 0}
           icon={FileText}
         />
+        
       </div>
 
       {/* Detailed Grid - 2 Columns */}

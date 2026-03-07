@@ -13,22 +13,7 @@ interface PublikasiSectionProps {
 // Normalize function to handle any case from database
 function normalizeKategori(kategori: string | undefined): string {
   if (!kategori) return '';
-  const lower = kategori.toLowerCase().trim();
-  
-  // Map variations to standard values
-  const mapping: Record<string, string> = {
-    'buku': 'buku',
-    'book': 'buku',
-    'jurnal': 'jurnal',
-    'journal': 'jurnal',
-    'op-ed': 'op-ed',
-    'oped': 'op-ed',
-    'press': 'press',
-    'press/news': 'press',
-    'news': 'press',
-  };
-  
-  return mapping[lower] || lower;
+  return kategori.trim();
 }
 
 export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
@@ -59,11 +44,12 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
   }, [publikasi, searchTerm, activeFilter]);
 
   const filterButtons = [
-    { label: 'Semua', filter: 'all' as FilterKategori },
-    { label: 'Buku', filter: 'buku' as FilterKategori },
-    { label: 'Jurnal', filter: 'jurnal' as FilterKategori },
-    { label: 'Op-ed', filter: 'op-ed' as FilterKategori },
-    { label: 'Press/News', filter: 'press' as FilterKategori },
+    { label: 'Semua', filter: 'all' },
+    { label: 'Jurnal', filter: 'Jurnal' },
+    { label: 'Buku', filter: 'Buku' },
+    { label: 'Op-ed', filter: 'Op-ed' },
+    { label: 'Media Appearance', filter: 'Media Appearance' },
+    { label: 'Theses', filter: 'Theses' },
   ];
 
   return (

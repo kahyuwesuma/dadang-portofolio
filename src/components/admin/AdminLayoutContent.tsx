@@ -42,10 +42,10 @@ export default function AdminLayoutContent({ children }: AdminLayoutContentProps
   }
 
   const menuItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', href: '/admin' },
+    // { icon: LayoutDashboard, label: 'Dashboard', href: '/admin' },
     { icon: BookOpen, label: 'Publikasi', href: '/admin/publikasi' },
-    { icon: Heart, label: 'Pengabdian', href: '/admin/pengabdian' },
-    { icon: BarChart3, label: 'Statistik', href: '/admin/statistik' },
+    // { icon: Heart, label: 'Pengabdian', href: '/admin/pengabdian' },
+    // { icon: BarChart3, label: 'Statistik', href: '/admin/statistik' },
   ]
 
   if (loading) {
