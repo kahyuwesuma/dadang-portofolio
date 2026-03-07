@@ -43,13 +43,13 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
     });
   }, [publikasi, searchTerm, activeFilter]);
 
-  const filterButtons = [
+  const filterButtons: { label: string; filter: FilterKategori }[] = [
     { label: 'Semua', filter: 'all' },
-    { label: 'Jurnal', filter: 'Jurnal' },
-    { label: 'Buku', filter: 'Buku' },
-    { label: 'Op-ed', filter: 'Op-ed' },
-    { label: 'Media Appearance', filter: 'Media Appearance' },
-    { label: 'Theses', filter: 'Theses' },
+    { label: 'Jurnal', filter: 'jurnal' },
+    { label: 'Buku', filter: 'buku' },
+    { label: 'Op-ed', filter: 'opeds' },
+    { label: 'Media Appearance', filter: 'media' },
+    { label: 'Theses', filter: 'theses' },
   ];
 
   return (

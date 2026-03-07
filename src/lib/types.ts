@@ -47,8 +47,8 @@ export interface Statistik {
 export type FilterKategori =
   | 'all'
   | 'theses'
-  | 'books'
-  | 'journals'
+  | 'buku'
+  | 'jurnal'
   | 'opeds'
   | 'media';
 
