@@ -9,9 +9,10 @@ export default function HeroSection() {
             {/* ── Full-width Photo ── */}
             <div className="absolute inset-0">
                 <Image
-                    src="/images/profile.png"
+                    src="/images/profile2.2.png"
                     alt="Dr. Dadang I K Mujiono"
                     fill
+                    sizes="100vw"
                     priority
                     className="object-cover"
                     style={{ objectPosition: 'center 18%' }}
