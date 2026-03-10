@@ -15,7 +15,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on outside click
   useEffect(() => {
     const handleOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -26,7 +25,6 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleOutside);
   }, [isMobileMenuOpen]);
 
-  // Lock body scroll when mobile menu open
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -47,16 +45,16 @@ export default function Navbar() {
     { label: 'Media Appearance' },
   ];
 
+  // Desktop: hitam saat transparan (di atas hero terang), putih saat scrolled (di atas bar gelap)
+  const desktopLinkColor = isScrolled ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.75)';
+  const desktopLinkHover = isScrolled ? 'rgba(255,255,255,1)' : 'rgba(0,0,0,1)';
+
   return (
     <>
       <style>{`
         @keyframes navSlideDown {
           from { opacity: 0; transform: translateY(-8px); }
           to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes drawerSlideIn {
-          from { opacity: 0; transform: translateX(100%); }
-          to   { opacity: 1; transform: translateX(0); }
         }
         @keyframes drawerItemFade {
           from { opacity: 0; transform: translateX(16px); }
@@ -74,17 +72,13 @@ export default function Navbar() {
         .nav-link-desktop::after {
           content: '';
           position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 0;
-          height: 1px;
+          bottom: 0; left: 0;
+          width: 0; height: 1px;
           background: currentColor;
           transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .nav-link-desktop:hover::after,
-        .nav-link-desktop.active::after {
-          width: 100%;
-        }
+        .nav-link-desktop.active::after { width: 100%; }
 
         .hamburger-line {
           display: block;
@@ -111,17 +105,17 @@ export default function Navbar() {
         style={{
           animation: 'navSlideDown 0.6s cubic-bezier(0.16,1,0.3,1) both',
           transition: 'background 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.4s ease',
-          background: isScrolled
-            ? 'rgba(10,10,10,0.72)'
-            : 'transparent',
+          background: isScrolled ? 'rgba(10,10,10,0.72)' : 'transparent',
           backdropFilter: isScrolled ? 'blur(18px) saturate(1.4)' : 'none',
           WebkitBackdropFilter: isScrolled ? 'blur(18px) saturate(1.4)' : 'none',
           boxShadow: isScrolled ? '0 1px 0 rgba(255,255,255,0.06)' : 'none',
         }}
       >
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 flex justify-between items-center" style={{ height: '64px' }}>
-
-          {/* Desktop Links */}
+        <div
+          className="max-w-7xl mx-auto px-6 lg:px-10 flex justify-end items-center"
+          style={{ height: '64px' }}
+        >
+          {/* Desktop Links — kanan, hitam di atas hero */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <button
@@ -134,15 +128,15 @@ export default function Navbar() {
                   fontWeight: 500,
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
-                  color: 'rgba(255,255,255,0.75)',
+                  color: desktopLinkColor,
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
                   padding: '2px 0',
-                  transition: 'color 0.2s ease',
+                  transition: 'color 0.3s ease',
                 }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,1)')}
-                onMouseLeave={e => (e.currentTarget.style.color = activeLink === link.label ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.75)')}
+                onMouseEnter={e => (e.currentTarget.style.color = desktopLinkHover)}
+                onMouseLeave={e => (e.currentTarget.style.color = activeLink === link.label ? desktopLinkHover : desktopLinkColor)}
               >
                 {link.label}
               </button>
@@ -157,11 +151,13 @@ export default function Navbar() {
             style={{
               width: '36px',
               height: '36px',
-              color: 'rgba(255,255,255,0.9)',
+              // Hamburger: hitam di atas hero, putih saat scrolled
+              color: isScrolled ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.8)',
               background: 'none',
               border: 'none',
               cursor: 'pointer',
               padding: 0,
+              transition: 'color 0.3s ease',
             }}
           >
             <span className="hamburger-line line-top" />
@@ -184,7 +180,7 @@ export default function Navbar() {
         />
       )}
 
-      {/* Mobile Drawer — slides in from right */}
+      {/* Mobile Drawer */}
       <div
         className="fixed top-0 right-0 h-full z-50 md:hidden"
         style={{
@@ -203,21 +199,17 @@ export default function Navbar() {
           paddingBottom: '40px',
         }}
       >
-        {/* Section label */}
-        <p
-          style={{
-            fontSize: '0.6rem',
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.28)',
-            marginBottom: '28px',
-            fontFamily: 'var(--font-sans, sans-serif)',
-          }}
-        >
+        <p style={{
+          fontSize: '0.6rem',
+          letterSpacing: '0.22em',
+          textTransform: 'uppercase',
+          color: 'rgba(255,255,255,0.28)',
+          marginBottom: '28px',
+          fontFamily: 'var(--font-sans, sans-serif)',
+        }}>
           Navigation
         </p>
 
-        {/* Links */}
         <nav className="flex flex-col gap-1">
           {navLinks.map((link, i) => (
             <button
@@ -252,7 +244,6 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Footer inside drawer */}
         <div style={{ marginTop: 'auto' }}>
           <p style={{
             fontSize: '0.65rem',
