@@ -7,6 +7,7 @@ const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','
 const groups = [
     {
         label: 'Academia',
+        index: '01',
         entries: [
             `I am a researcher and lecturer specializing in maritime governance, eco-tourism, and the socio-political dynamics of coastal and sea communities in Indonesia, particularly in the Derawan Archipelago.`,
             `I earned my Bachelor's degree (S.Sos.) in International Relations from Universitas Mulawarman in 2011, where I examined aviation liberalization in Southeast Asia under the ASEAN Open Sky Policy. I later completed my Master's degree (M.A.) at Universitas Gadjah Mada, focusing on non-traditional security challenges faced by border communities in the Indonesia–Malaysia region, with a case study of Sebatik Island.`,
@@ -16,6 +17,7 @@ const groups = [
     },
     {
         label: 'Scholarship',
+        index: '02',
         entries: [
             `In addition to teaching and research, I serve as a reviewer for Bhuvana: Journal of Global Studies, managed by Universitas Satya Negara Indonesia, contributing to the peer-review process and interdisciplinary scholarship on environmental governance and global issues.`,
             `I also write for local, national, and international media on topics ranging from local and national politics to environmental conservation. For me, writing is not only academic output; it is a form of public engagement and institutional dialogue, and a way to contribute directly to national development.`,
@@ -25,6 +27,7 @@ const groups = [
     },
     {
         label: 'Conservation',
+        index: '03',
         entries: [
             `After several years of academic work in the Derawan Archipelago, in September 2023, I was invited to join Global Conservation, an international organization dedicated to protecting UNESCO World Heritage Sites from illegal and unsustainable activities. I initially served as Project Director for Derawan before being entrusted with the role of Director of Indonesia in 2024.`,
             `At Global Conservation, I supervise and coordinate marine conservation and community protection initiatives across Indonesia, with a primary mission in the Derawan Archipelago. My work includes strengthening protection mechanisms against illegal fishing and other unlawful activities in marine protected areas through the deployment of technology-based monitoring systems, including the Marine Monitor (M2), while promoting multi-stakeholder engagement to safeguard this critical ecosystem.`,
@@ -34,6 +37,7 @@ const groups = [
     },
     {
         label: 'Community',
+        index: '04',
         entries: [
             `To strengthen local implementation of conservation initiatives, I established Yayasan Laut Biru Kepulauan Derawan (YLBKD), where I serve as Chairman. Through YLBKD, I focus on community protection by investing in local capacity-building initiatives, including training programs, environmental education, skill-development courses, and support for fishers transitioning to more sustainable fishing practices. I believe conservation must be accompanied by human resource development and long-term community resilience.`,
             `Outside my professional commitments, I maintain an active lifestyle and train regularly at both private and commercial gyms. I have also resumed diving—both as part of my responsibility in marine conservation and as a personal commitment to understanding and appreciating the underwater ecosystems, especially the Derawan Archipelago and beyond.`,
@@ -58,7 +62,7 @@ export default function DescSection() {
                     }
                 });
             },
-            { threshold: 0.08 }
+            { threshold: 0.06 }
         );
 
         items.forEach((el) => observer.observe(el));
@@ -69,181 +73,310 @@ export default function DescSection() {
 
     return (
         <>
-            <style jsx global>{`
-                @import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cormorant+Garamond:wght@300;400&family=Jost:wght@200;300;400&display=swap');
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@100;200;300;400&display=swap');
 
                 .desc-item {
                     opacity: 0;
-                    transform: translateY(26px);
-                    transition: opacity 1s cubic-bezier(0.16,1,0.3,1),
-                                transform 1s cubic-bezier(0.16,1,0.3,1);
+                    transform: translateY(28px);
+                    transition: opacity 1.2s cubic-bezier(0.16,1,0.3,1),
+                                transform 1.2s cubic-bezier(0.16,1,0.3,1);
                 }
                 .desc-item.desc-visible {
                     opacity: 1;
                     transform: translateY(0);
                 }
 
-                .desc-para:hover .desc-numeral {
-                    opacity: 0.7 !important;
+                .desc-para::before {
+                    content: '';
+                    position: absolute;
+                    left: -1.5rem;
+                    top: 0;
+                    bottom: 0;
+                    width: 1px;
+                    background: linear-gradient(
+                        to bottom,
+                        transparent,
+                        rgba(255,255,255,0.07) 20%,
+                        rgba(255,255,255,0.07) 80%,
+                        transparent
+                    );
+                    transform: scaleY(0);
+                    transform-origin: top;
+                    transition: transform 0.7s cubic-bezier(0.16,1,0.3,1);
                 }
-                .desc-para:hover .desc-text {
-                    color: rgba(255,255,255,0.88) !important;
+                .desc-para:hover::before { transform: scaleY(1); }
+                .desc-para:hover .desc-numeral { color: rgba(255,255,255,0.45) !important; transform: translateY(-2px); }
+                .desc-para:hover .desc-text   { color: rgba(255,255,255,0.85) !important; }
+
+                .desc-text    { transition: color 0.6s cubic-bezier(0.16,1,0.3,1); }
+                .desc-numeral { transition: color 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+
+                .group-label-text { position: relative; display: inline-block; }
+                .group-label-text::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -3px; left: 0;
+                    width: 0; height: 1px;
+                    background: rgba(255,255,255,0.2);
+                    transition: width 1.4s cubic-bezier(0.16,1,0.3,1) 0.2s;
                 }
-                .desc-text {
-                    transition: color 0.4s ease;
+                .desc-visible .group-label-text::after { width: 100%; }
+
+                /* ── Desktop layout ── */
+                .desc-group {
+                    display: grid;
+                    grid-template-columns: 11rem 1fr;
+                    column-gap: 4rem;
                 }
-                .desc-numeral {
-                    transition: opacity 0.4s ease;
+                .desc-label-col {
+                    display: block;
+                }
+                .desc-label-inner {
+                    position: sticky;
+                    top: 7rem;
+                }
+
+                /* ── Mobile layout ── */
+                @media (max-width: 640px) {
+                    .desc-group {
+                        display: block;
+                    }
+                    .desc-label-col {
+                        margin-bottom: 2rem;
+                    }
+                    .desc-label-inner {
+                        position: static;
+                        display: flex;
+                        align-items: center;
+                        gap: 1rem;
+                    }
+                    .desc-label-index {
+                        font-size: 2.8rem !important;
+                        margin-bottom: 0 !important;
+                    }
+                    .desc-label-divider {
+                        display: none !important;
+                    }
+                    .desc-para-grid {
+                        grid-template-columns: 1.6rem 1fr !important;
+                        column-gap: 1rem !important;
+                    }
+                    .desc-para::before {
+                        left: -0.8rem;
+                    }
+                    .desc-text-p {
+                        font-size: 1rem !important;
+                        line-height: 1.85 !important;
+                    }
+                    .desc-section-inner {
+                        padding: 0 1.4rem !important;
+                    }
+                    .desc-section-root {
+                        padding: 6rem 0 8rem !important;
+                    }
+                    .desc-group-gap {
+                        margin-bottom: 5.5rem !important;
+                    }
+                    .desc-closing {
+                        margin-top: 5rem !important;
+                    }
+                }
+
+                /* ── Small-medium (tablet) ── */
+                @media (min-width: 641px) and (max-width: 900px) {
+                    .desc-group {
+                        grid-template-columns: 8rem 1fr;
+                        column-gap: 2.5rem;
+                    }
+                    .desc-label-index {
+                        font-size: 3rem !important;
+                    }
+                    .desc-text-p {
+                        font-size: 1.05rem !important;
+                    }
+                    .desc-section-inner {
+                        padding: 0 2rem !important;
+                    }
                 }
             `}</style>
 
             <section
                 ref={sectionRef}
                 id="deskripsi"
+                className="desc-section-root"
                 style={{
-                    background: '#060606',
-                    padding: '8rem 0 10rem',
+                    background: '#080806',
+                    padding: '11rem 0 13rem',
                     position: 'relative',
                     overflow: 'hidden',
                 }}
             >
-                {/* Subtle vignette */}
+                {/* Film grain */}
                 <div style={{
-                    position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
-                    background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,255,255,0.02) 0%, transparent 70%)',
+                    position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0.55,
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E")`,
+                    backgroundSize: '200px 200px',
                 }} />
 
-                {/* Noise grain */}
-                <div style={{
-                    position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0.4,
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")`,
-                    backgroundSize: '160px 160px',
-                }} />
-
-                <div style={{ maxWidth: '820px', margin: '0 auto', padding: '0 2.5rem', position: 'relative', zIndex: 1 }}>
-
-                    {/* ── Opening ornament ── */}
-                    <div className="desc-item" style={{ textAlign: 'center', marginBottom: '5.5rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', justifyContent: 'center' }}>
-                            <div style={{ height: '1px', width: '60px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.12))' }} />
-                            <span style={{
-                                fontFamily: '"Cormorant Garamond", serif',
-                                fontWeight: 300,
-                                fontSize: '0.65rem',
-                                letterSpacing: '0.45em',
-                                textTransform: 'uppercase',
-                                color: 'rgba(255,255,255,0.22)',
-                            }}>
-                                Curriculum Vitae
-                            </span>
-                            <div style={{ height: '1px', width: '60px', background: 'linear-gradient(to left, transparent, rgba(255,255,255,0.12))' }} />
-                        </div>
-                    </div>
-
-                    {/* ── Groups ── */}
+                <div
+                    className="desc-section-inner"
+                    style={{ maxWidth: '900px', margin: '0 auto', padding: '0 3rem', position: 'relative', zIndex: 1 }}
+                >
                     {groups.map((group, gi) => {
                         const groupStart = paraIndex;
                         paraIndex += group.entries.length;
 
                         return (
-                            <div key={gi} style={{ marginBottom: gi < groups.length - 1 ? '7rem' : 0 }}>
+                            <div
+                                key={gi}
+                                className={`desc-group ${gi < groups.length - 1 ? 'desc-group-gap' : ''}`}
+                                style={{ marginBottom: gi < groups.length - 1 ? '9rem' : 0 }}
+                            >
+                                {/* Left: label column */}
+                                <div className="desc-label-col">
+                                    <div
+                                        className="desc-item desc-label-inner"
+                                        style={{ transitionDelay: '0.04s' }}
+                                    >
+                                        <div
+                                            className="desc-label-index"
+                                            style={{
+                                                fontFamily: '"Jost", sans-serif',
+                                                fontWeight: 100,
+                                                fontSize: '4.5rem',
+                                                lineHeight: 1,
+                                                color: 'rgba(255,255,255,0.04)',
+                                                letterSpacing: '-0.02em',
+                                                marginBottom: '1.4rem',
+                                                userSelect: 'none',
+                                            }}
+                                        >
+                                            {group.index}
+                                        </div>
 
-                                {/* Group header */}
-                                <div
-                                    className="desc-item"
-                                    style={{ marginBottom: '3.2rem', transitionDelay: '0.04s' }}
-                                >
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.6rem' }}>
-                                        {/* Vertical tick */}
-                                        <div style={{
-                                            width: '1px',
-                                            height: '28px',
-                                            background: 'linear-gradient(to bottom, rgba(255,255,255,0.35), transparent)',
-                                            flexShrink: 0,
-                                        }} />
-                                        <span style={{
-                                            fontFamily: '"Jost", sans-serif',
-                                            fontWeight: 200,
-                                            fontSize: '0.58rem',
-                                            letterSpacing: '0.42em',
-                                            textTransform: 'uppercase',
-                                            color: 'rgba(255,255,255,0.28)',
-                                        }}>
+                                        <div
+                                            className="desc-label-divider"
+                                            style={{
+                                                width: '20px',
+                                                height: '1px',
+                                                background: 'rgba(255,255,255,0.18)',
+                                                marginBottom: '1.1rem',
+                                            }}
+                                        />
+
+                                        <div
+                                            className="group-label-text"
+                                            style={{
+                                                fontFamily: '"Jost", sans-serif',
+                                                fontWeight: 200,
+                                                fontSize: '0.56rem',
+                                                letterSpacing: '0.38em',
+                                                textTransform: 'uppercase',
+                                                color: 'rgba(255,255,255,0.3)',
+                                            }}
+                                        >
                                             {group.label}
-                                        </span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                {/* Paragraphs */}
-                                {group.entries.map((text, pi) => {
-                                    const absIndex = groupStart + pi;
-                                    const delay = `${0.08 + pi * 0.08}s`;
+                                {/* Right: entries */}
+                                <div>
+                                    {group.entries.map((text, pi) => {
+                                        const absIndex = groupStart + pi;
+                                        const delay = `${0.1 + pi * 0.1}s`;
 
-                                    return (
-                                        <div
-                                            key={pi}
-                                            className="desc-item desc-para"
-                                            style={{
-                                                display: 'grid',
-                                                gridTemplateColumns: '2.8rem 1fr',
-                                                columnGap: '2rem',
-                                                marginBottom: pi < group.entries.length - 1 ? '2.8rem' : 0,
-                                                transitionDelay: delay,
-                                                cursor: 'default',
-                                            }}
-                                        >
-                                            {/* Roman numeral */}
+                                        return (
                                             <div
-                                                className="desc-numeral"
+                                                key={pi}
+                                                className="desc-item desc-para"
                                                 style={{
-                                                    fontFamily: '"Cormorant Garamond", serif',
-                                                    fontWeight: 300,
-                                                    fontSize: '0.68rem',
-                                                    color: 'rgba(255,255,255,0.18)',
-                                                    letterSpacing: '0.06em',
-                                                    paddingTop: '0.38rem',
-                                                    textAlign: 'right',
-                                                    userSelect: 'none',
-                                                    lineHeight: 1,
+                                                    position: 'relative',
+                                                    display: 'grid',
+                                                    gridTemplateColumns: '2.4rem 1fr',
+                                                    columnGap: '1.8rem',
+                                                    marginBottom: pi < group.entries.length - 1 ? '3.4rem' : 0,
+                                                    transitionDelay: delay,
+                                                    cursor: 'default',
+                                                    paddingLeft: '0.2rem',
                                                 }}
                                             >
-                                                {romanNumerals[absIndex]}
-                                            </div>
+                                                {/* Roman numeral */}
+                                                <div
+                                                    className="desc-numeral desc-para-grid"
+                                                    style={{
+                                                        fontFamily: '"Cormorant Garamond", serif',
+                                                        fontWeight: 300,
+                                                        fontSize: '0.62rem',
+                                                        color: 'rgba(255,255,255,0.22)',
+                                                        letterSpacing: '0.08em',
+                                                        paddingTop: '0.52rem',
+                                                        textAlign: 'right',
+                                                        userSelect: 'none',
+                                                        lineHeight: 1,
+                                                    }}
+                                                >
+                                                    {romanNumerals[absIndex]}
+                                                </div>
 
-                                            {/* Paragraph text */}
-                                            <p
-                                                className="desc-text"
-                                                style={{
-                                                    fontFamily: '"Cormorant", serif',
-                                                    fontWeight: 300,
-                                                    fontSize: '1.1rem',
-                                                    lineHeight: 1.95,
-                                                    color: 'rgba(255,255,255,0.52)',
-                                                    margin: 0,
-                                                    letterSpacing: '0.014em',
-                                                }}
-                                            >
-                                                {text}
-                                            </p>
-                                        </div>
-                                    );
-                                })}
+                                                {/* Paragraph */}
+                                                <p
+                                                    className="desc-text desc-text-p"
+                                                    style={{
+                                                        fontFamily: '"EB Garamond", serif',
+                                                        fontWeight: 400,
+                                                        fontSize: '1.13rem',
+                                                        lineHeight: 2,
+                                                        color: 'rgba(255,255,255,0.68)',
+                                                        margin: 0,
+                                                        letterSpacing: '0.012em',
+                                                    }}
+                                                >
+                                                    {text}
+                                                </p>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         );
                     })}
 
-                    {/* ── Closing ornament ── */}
-                    <div className="desc-item" style={{ marginTop: '6rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.2rem' }}>
-                        <div style={{ height: '1px', width: '50px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.1))' }} />
+                    {/* Closing ornament */}
+                    <div
+                        className="desc-item desc-closing"
+                        style={{
+                            marginTop: '8rem',
+                            paddingTop: '3rem',
+                            borderTop: '1px solid rgba(255,255,255,0.045)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                        }}
+                    >
                         <div style={{
-                            width: '4px', height: '4px',
-                            border: '1px solid rgba(255,255,255,0.2)',
-                            transform: 'rotate(45deg)',
-                            flexShrink: 0,
-                        }} />
-                        <div style={{ height: '1px', width: '50px', background: 'linear-gradient(to left, transparent, rgba(255,255,255,0.1))' }} />
-                    </div>
+                            fontFamily: '"Cormorant Garamond", serif',
+                            fontWeight: 300,
+                            fontSize: '0.72rem',
+                            fontStyle: 'italic',
+                            color: 'rgba(255,255,255,0.12)',
+                            letterSpacing: '0.06em',
+                        }}>
+                            Samarinda · East Kalimantan
+                        </div>
 
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem' }}>
+                            <div style={{ height: '1px', width: '32px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.14))' }} />
+                            <div style={{
+                                width: '5px', height: '5px',
+                                border: '1px solid rgba(255,255,255,0.18)',
+                                transform: 'rotate(45deg)',
+                                flexShrink: 0,
+                            }} />
+                            <div style={{ height: '1px', width: '32px', background: 'linear-gradient(to left, transparent, rgba(255,255,255,0.14))' }} />
+                        </div>
+                    </div>
                 </div>
             </section>
         </>
