@@ -1,28 +1,42 @@
-// src/app/api/desc-content/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { readFileSync, writeFileSync } from 'fs';
-import path from 'path';
+import { createClient } from '@supabase/supabase-js';
 
-const DATA_PATH = path.join(process.cwd(), 'public', 'data', 'desc-content.json');
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!   // service role — bisa write
+);
 
 export async function GET() {
   try {
-    const raw = readFileSync(DATA_PATH, 'utf-8');
-    return NextResponse.json(JSON.parse(raw));
-  } catch {
-    return NextResponse.json({ error: 'Failed to read content' }, { status: 500 });
+    const { data, error } = await supabase
+      .from('desc_content')
+      .select('groups')
+      .eq('id', 1)
+      .single();
+
+    if (error) throw error;
+    return NextResponse.json({ groups: data?.groups ?? [] });
+  } catch (err) {
+    console.error('[desc-content GET]', err);
+    return NextResponse.json({ groups: [] }, { status: 500 });
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    if (!body.groups || !Array.isArray(body.groups)) {
-      return NextResponse.json({ error: 'Invalid data shape' }, { status: 400 });
+    const { groups } = await req.json();
+    if (!Array.isArray(groups)) {
+      return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
     }
-    writeFileSync(DATA_PATH, JSON.stringify(body, null, 2), 'utf-8');
+
+    const { error } = await supabase
+      .from('desc_content')
+      .upsert({ id: 1, groups, updated_at: new Date().toISOString() });
+
+    if (error) throw error;
     return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ error: 'Failed to save content' }, { status: 500 });
+  } catch (err) {
+    console.error('[desc-content POST]', err);
+    return NextResponse.json({ error: 'Failed to save' }, { status: 500 });
   }
 }
