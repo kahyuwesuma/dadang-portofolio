@@ -34,7 +34,7 @@ export default function HeroSection() {
             >
                 <div className="absolute inset-0">
                     <Image
-                        src="/images/profile4.jpeg"
+                        src="/images/profile5.jpeg"
                         alt="Dr. Dadang I K Mujiono"
                         fill
                         sizes="(max-width: 768px) 100vw, 100vw"
