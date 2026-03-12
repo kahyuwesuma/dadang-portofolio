@@ -233,28 +233,8 @@ export default function DescSection() {
               );
             })
           )}
-
-          <div className="desc-item desc-closing" style={{
-            marginTop: '8rem', paddingTop: '3rem',
-            borderTop: '1px solid rgba(255,255,255,0.22)',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            flexWrap: 'wrap', gap: '1rem',
-          }}>
-            <div className="desc-closing-loc" style={{
-              fontFamily: '"Cormorant Garamond", serif', fontWeight: 300,
-              fontSize: '0.72rem', fontStyle: 'italic',
-              color: 'rgba(255,255,255,0.55)', letterSpacing: '0.06em',
-            }}>
-              Samarinda · East Kalimantan
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem' }}>
-              <div style={{ height: '1px', width: '32px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.45))' }} />
-              <div style={{ width: '5px', height: '5px', border: '1px solid rgba(255,255,255,0.55)', transform: 'rotate(45deg)', flexShrink: 0 }} />
-              <div style={{ height: '1px', width: '32px', background: 'linear-gradient(to left, transparent, rgba(255,255,255,0.45))' }} />
-            </div>
-          </div>
         </div>
       </section>
     </>
   );
-}
+} 
