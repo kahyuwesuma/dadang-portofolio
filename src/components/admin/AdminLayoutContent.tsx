@@ -39,7 +39,7 @@ export default function AdminLayoutContent({ children }: AdminLayoutContentProps
 
   const menuItems = [
     { icon: BookOpen, label: 'Publikasi', href: '/admin/publikasi' },
-    { icon: FileText, label: 'Deskripsi', href: '/admin/desc' }
+    { icon: FileText, label: 'Home Page', href: '/admin/desc' }
   ]
 
   if (loading) {
