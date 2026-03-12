@@ -2,120 +2,148 @@
 
 import React from 'react';
 import { ExternalLink } from 'lucide-react';
-import type { Publikasi } from '@/lib/types';
+import type { Publikasi, PublikasiKategori } from '@/lib/types';
 
 interface PublikasiCardProps {
   publikasi: Publikasi;
 }
 
-// Normalize function to handle any case from database
-const normalizeKategori = (kategori: string): string => {
-  if (!kategori) return '';
-  const lower = kategori.toLowerCase().trim();
-  
-  // Map variations to standard values
-  const mapping: Record<string, string> = {
-    'buku': 'buku',
-    'book': 'buku',
-    'jurnal': 'jurnal',
-    'journal': 'jurnal',
-    'op-ed': 'op-ed',
-    'oped': 'op-ed',
-    'press': 'press',
-    'press/news': 'press',
-    'news': 'press',
-  };
-  
-  return mapping[lower] || lower;
-};
-
-// Map to display colors
-const categoryColors: Record<string, string> = {
-  'buku': 'text-emerald-400',
-  'jurnal': 'text-blue-400',
-  'op-ed': 'text-purple-400',
-  'press': 'text-amber-400',
-};
-
-// Map to display labels
-const categoryLabels: Record<string, string> = {
-  'buku': 'Buku',
-  'jurnal': 'Jurnal',
-  'op-ed': 'Op-ed',
-  'press': 'Press/News',
+const CATEGORY_CONFIG: Record<PublikasiKategori, { label: string; color: string }> = {
+  'Buku':             { label: 'Buku',             color: 'rgba(52,211,153,0.7)'  },
+  'Jurnal':           { label: 'Jurnal',            color: 'rgba(96,165,250,0.7)'  },
+  'Op-ed':            { label: 'Op-ed',             color: 'rgba(167,139,250,0.7)' },
+  'Media Appearance': { label: 'Media Appearance',  color: 'rgba(251,191,36,0.7)'  },
+  'Theses':           { label: 'Theses',            color: 'rgba(251,113,133,0.7)' },
 };
 
 export default function PublikasiCard({ publikasi }: PublikasiCardProps) {
+  const cfg = CATEGORY_CONFIG[publikasi.kategori];
+  const label = cfg?.label ?? publikasi.kategori;
+  const color = cfg?.color ?? 'rgba(161,161,170,0.7)';
+
   const handleClick = () => {
-    if (publikasi.url) {
-      window.open(publikasi.url, '_blank', 'noopener,noreferrer');
-    }
+    if (publikasi.url) window.open(publikasi.url, '_blank', 'noopener,noreferrer');
   };
-
-  // Normalize kategori from database
-  const normalizedKategori = normalizeKategori(publikasi.kategori);
-
-  // Get color and label with fallback
-  const categoryColor = categoryColors[normalizedKategori] || 'text-zinc-400';
-  const categoryLabel = categoryLabels[normalizedKategori] || publikasi.kategori;
 
   return (
     <div
-      className="card-hover publication-card p-8 rounded-xl"
-      data-category={normalizedKategori}
-      data-title={publikasi.judul.toLowerCase()}
-      data-author={publikasi.penulis.toLowerCase()}
-      data-keywords={publikasi.keywords?.toLowerCase() || ''}
       onClick={handleClick}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          handleClick();
-        }
+      role={publikasi.url ? 'button' : undefined}
+      tabIndex={publikasi.url ? 0 : undefined}
+      onKeyDown={e => { if (publikasi.url && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick(); } }}
+      style={{
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+        padding: '2.4rem 0',
+        cursor: publikasi.url ? 'pointer' : 'default',
+        display: 'grid',
+        gridTemplateColumns: '10rem 1fr',
+        columnGap: '3rem',
+        transition: 'opacity 0.2s ease',
       }}
+      onMouseEnter={e => { if (publikasi.url) (e.currentTarget as HTMLElement).style.opacity = '0.72'; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
     >
-      <div className="flex justify-between items-start mb-4">
-        <div className={`category-badge ${categoryColor} text-sm font-medium`}>
-          {categoryLabel}
+      {/* Left: meta column */}
+      <div style={{ paddingTop: '0.25rem' }}>
+        <span style={{
+          fontFamily: '"Jost", sans-serif',
+          fontWeight: 200,
+          fontSize: '0.62rem',
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          color,
+          display: 'block',
+          marginBottom: '0.6rem',
+        }}>
+          {label}
+        </span>
+
+        <span style={{
+          fontFamily: '"Cormorant Garamond", serif',
+          fontWeight: 300,
+          fontSize: '0.9rem',
+          color: 'rgba(255,255,255,0.25)',
+          letterSpacing: '0.04em',
+          fontVariantNumeric: 'tabular-nums',
+        }}>
+          {publikasi.tahun}
+        </span>
+      </div>
+
+      {/* Right: content */}
+      <div>
+        {/* Title row */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1.5rem', marginBottom: '0.75rem' }}>
+          <h3 style={{
+            fontFamily: '"Cormorant Garamond", serif',
+            fontWeight: 400,
+            fontSize: 'clamp(1.15rem, 2vw, 1.45rem)',
+            color: 'rgba(255,255,255,0.88)',
+            lineHeight: 1.3,
+            letterSpacing: '0.01em',
+            margin: 0,
+          }}>
+            {publikasi.judul}
+          </h3>
+          {publikasi.url && (
+            <ExternalLink style={{
+              width: '14px', height: '14px',
+              color: 'rgba(255,255,255,0.2)',
+              flexShrink: 0,
+              marginTop: '0.3rem',
+            }} />
+          )}
         </div>
-        {publikasi.url && (
-          <div className="external-link-icon">
-            <ExternalLink className="w-5 h-5 text-zinc-500" />
+
+        {/* Author */}
+        <p style={{
+          fontFamily: '"Cormorant Garamond", serif',
+          fontWeight: 300,
+          fontStyle: 'italic',
+          fontSize: '0.92rem',
+          color: 'rgba(255,255,255,0.35)',
+          margin: '0 0 0.9rem',
+          letterSpacing: '0.02em',
+        }}>
+          {publikasi.penulis}
+        </p>
+
+        {/* Description */}
+        {publikasi.deskripsi && (
+          <p style={{
+            fontFamily: '"Cormorant Garamond", serif',
+            fontWeight: 300,
+            fontSize: '0.95rem',
+            lineHeight: 1.75,
+            color: 'rgba(255,255,255,0.42)',
+            margin: '0 0 1rem',
+            letterSpacing: '0.01em',
+          }}>
+            {publikasi.deskripsi}
+          </p>
+        )}
+
+        {/* Tags */}
+        {publikasi.tags && publikasi.tags.length > 0 && (
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            {publikasi.tags.map((tag, i) => (
+              <span key={i} style={{
+                fontFamily: '"Jost", sans-serif',
+                fontWeight: 200,
+                fontSize: '0.58rem',
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.2)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: '2px',
+                padding: '0.2rem 0.6rem',
+              }}>
+                {tag}
+              </span>
+            ))}
           </div>
         )}
       </div>
-
-      <h3 className="text-2xl font-semibold mb-3 hover:text-zinc-300 transition-colors">
-        {publikasi.judul}
-      </h3>
-
-      <div className="text-zinc-500 text-sm mb-4">
-        <span className="text-zinc-400">Penulis:</span> {publikasi.penulis}
-        {publikasi.tahun && (
-          <>
-            {' • '}
-            <span className="text-zinc-400">Tahun:</span> {publikasi.tahun}
-          </>
-        )}
-      </div>
-
-      {publikasi.deskripsi && (
-        <p className="text-zinc-400 text-sm leading-relaxed mb-4">
-          {publikasi.deskripsi}
-        </p>
-      )}
-
-      {publikasi.tags && publikasi.tags.length > 0 && (
-        <div className="flex gap-2 flex-wrap">
-          {publikasi.tags.map((tag, index) => (
-            <span key={index} className="tag text-xs px-3 py-1.5 rounded-full">
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

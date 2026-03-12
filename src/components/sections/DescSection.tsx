@@ -97,8 +97,8 @@ export default function DescSection() {
                     background: linear-gradient(
                         to bottom,
                         transparent,
-                        rgba(255,255,255,0.07) 20%,
-                        rgba(255,255,255,0.07) 80%,
+                        rgba(255,255,255,0.14) 20%,
+                        rgba(255,255,255,0.14) 80%,
                         transparent
                     );
                     transform: scaleY(0);
@@ -106,8 +106,8 @@ export default function DescSection() {
                     transition: transform 0.7s cubic-bezier(0.16,1,0.3,1);
                 }
                 .desc-para:hover::before { transform: scaleY(1); }
-                .desc-para:hover .desc-numeral { color: rgba(255,255,255,0.45) !important; transform: translateY(-2px); }
-                .desc-para:hover .desc-text   { color: rgba(255,255,255,0.85) !important; }
+                .desc-para:hover .desc-numeral { color: rgba(255,255,255,0.6) !important; transform: translateY(-2px); }
+                .desc-para:hover .desc-text   { color: rgba(255,255,255,0.9) !important; }
 
                 .desc-text    { transition: color 0.6s cubic-bezier(0.16,1,0.3,1); }
                 .desc-numeral { transition: color 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1); }
@@ -118,86 +118,39 @@ export default function DescSection() {
                     position: absolute;
                     bottom: -3px; left: 0;
                     width: 0; height: 1px;
-                    background: rgba(255,255,255,0.2);
+                    background: rgba(255,255,255,0.35);
                     transition: width 1.4s cubic-bezier(0.16,1,0.3,1) 0.2s;
                 }
                 .desc-visible .group-label-text::after { width: 100%; }
 
-                /* ── Desktop layout ── */
                 .desc-group {
                     display: grid;
                     grid-template-columns: 11rem 1fr;
                     column-gap: 4rem;
                 }
-                .desc-label-col {
-                    display: block;
-                }
-                .desc-label-inner {
-                    position: sticky;
-                    top: 7rem;
-                }
+                .desc-label-col { display: block; }
+                .desc-label-inner { position: sticky; top: 7rem; }
 
-                /* ── Mobile layout ── */
                 @media (max-width: 640px) {
-                    .desc-group {
-                        display: block;
-                    }
-                    .desc-label-col {
-                        margin-bottom: 2rem;
-                    }
-                    .desc-label-inner {
-                        position: static;
-                        display: flex;
-                        align-items: center;
-                        gap: 1rem;
-                    }
-                    .desc-label-index {
-                        font-size: 2.8rem !important;
-                        margin-bottom: 0 !important;
-                    }
-                    .desc-label-divider {
-                        display: none !important;
-                    }
-                    .desc-para-grid {
-                        grid-template-columns: 1.6rem 1fr !important;
-                        column-gap: 1rem !important;
-                    }
-                    .desc-para::before {
-                        left: -0.8rem;
-                    }
-                    .desc-text-p {
-                        font-size: 1rem !important;
-                        line-height: 1.85 !important;
-                    }
-                    .desc-section-inner {
-                        padding: 0 1.4rem !important;
-                    }
-                    .desc-section-root {
-                        padding: 6rem 0 8rem !important;
-                    }
-                    .desc-group-gap {
-                        margin-bottom: 5.5rem !important;
-                    }
-                    .desc-closing {
-                        margin-top: 5rem !important;
-                    }
+                    .desc-group { display: block; }
+                    .desc-label-col { margin-bottom: 2rem; }
+                    .desc-label-inner { position: static; display: flex; align-items: center; gap: 1rem; }
+                    .desc-label-index { font-size: 2.8rem !important; margin-bottom: 0 !important; }
+                    .desc-label-divider { display: none !important; }
+                    .desc-para-grid { grid-template-columns: 1.6rem 1fr !important; column-gap: 1rem !important; }
+                    .desc-para::before { left: -0.8rem; }
+                    .desc-text-p { font-size: 1rem !important; line-height: 1.85 !important; }
+                    .desc-section-inner { padding: 0 1.4rem !important; }
+                    .desc-section-root { padding: 6rem 0 8rem !important; }
+                    .desc-group-gap { margin-bottom: 5.5rem !important; }
+                    .desc-closing { margin-top: 5rem !important; }
                 }
 
-                /* ── Small-medium (tablet) ── */
                 @media (min-width: 641px) and (max-width: 900px) {
-                    .desc-group {
-                        grid-template-columns: 8rem 1fr;
-                        column-gap: 2.5rem;
-                    }
-                    .desc-label-index {
-                        font-size: 3rem !important;
-                    }
-                    .desc-text-p {
-                        font-size: 1.05rem !important;
-                    }
-                    .desc-section-inner {
-                        padding: 0 2rem !important;
-                    }
+                    .desc-group { grid-template-columns: 8rem 1fr; column-gap: 2.5rem; }
+                    .desc-label-index { font-size: 3rem !important; }
+                    .desc-text-p { font-size: 1.05rem !important; }
+                    .desc-section-inner { padding: 0 2rem !important; }
                 }
             `}</style>
 
@@ -212,7 +165,6 @@ export default function DescSection() {
                     overflow: 'hidden',
                 }}
             >
-                {/* Film grain */}
                 <div style={{
                     position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0.55,
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E")`,
@@ -233,12 +185,8 @@ export default function DescSection() {
                                 className={`desc-group ${gi < groups.length - 1 ? 'desc-group-gap' : ''}`}
                                 style={{ marginBottom: gi < groups.length - 1 ? '9rem' : 0 }}
                             >
-                                {/* Left: label column */}
                                 <div className="desc-label-col">
-                                    <div
-                                        className="desc-item desc-label-inner"
-                                        style={{ transitionDelay: '0.04s' }}
-                                    >
+                                    <div className="desc-item desc-label-inner" style={{ transitionDelay: '0.04s' }}>
                                         <div
                                             className="desc-label-index"
                                             style={{
@@ -246,7 +194,7 @@ export default function DescSection() {
                                                 fontWeight: 100,
                                                 fontSize: '4.5rem',
                                                 lineHeight: 1,
-                                                color: 'rgba(255,255,255,0.04)',
+                                                color: 'rgba(255,255,255,0.08)',
                                                 letterSpacing: '-0.02em',
                                                 marginBottom: '1.4rem',
                                                 userSelect: 'none',
@@ -260,7 +208,7 @@ export default function DescSection() {
                                             style={{
                                                 width: '20px',
                                                 height: '1px',
-                                                background: 'rgba(255,255,255,0.18)',
+                                                background: 'rgba(255,255,255,0.32)',
                                                 marginBottom: '1.1rem',
                                             }}
                                         />
@@ -273,7 +221,7 @@ export default function DescSection() {
                                                 fontSize: '0.56rem',
                                                 letterSpacing: '0.38em',
                                                 textTransform: 'uppercase',
-                                                color: 'rgba(255,255,255,0.3)',
+                                                color: 'rgba(255,255,255,0.5)',
                                             }}
                                         >
                                             {group.label}
@@ -281,7 +229,6 @@ export default function DescSection() {
                                     </div>
                                 </div>
 
-                                {/* Right: entries */}
                                 <div>
                                     {group.entries.map((text, pi) => {
                                         const absIndex = groupStart + pi;
@@ -302,14 +249,13 @@ export default function DescSection() {
                                                     paddingLeft: '0.2rem',
                                                 }}
                                             >
-                                                {/* Roman numeral */}
                                                 <div
                                                     className="desc-numeral desc-para-grid"
                                                     style={{
                                                         fontFamily: '"Cormorant Garamond", serif',
                                                         fontWeight: 300,
                                                         fontSize: '0.62rem',
-                                                        color: 'rgba(255,255,255,0.22)',
+                                                        color: 'rgba(255,255,255,0.38)',
                                                         letterSpacing: '0.08em',
                                                         paddingTop: '0.52rem',
                                                         textAlign: 'right',
@@ -320,7 +266,6 @@ export default function DescSection() {
                                                     {romanNumerals[absIndex]}
                                                 </div>
 
-                                                {/* Paragraph */}
                                                 <p
                                                     className="desc-text desc-text-p"
                                                     style={{
@@ -328,7 +273,7 @@ export default function DescSection() {
                                                         fontWeight: 400,
                                                         fontSize: '1.13rem',
                                                         lineHeight: 2,
-                                                        color: 'rgba(255,255,255,0.68)',
+                                                        color: 'rgba(255,255,255,0.78)',
                                                         margin: 0,
                                                         letterSpacing: '0.012em',
                                                     }}
@@ -343,13 +288,12 @@ export default function DescSection() {
                         );
                     })}
 
-                    {/* Closing ornament */}
                     <div
                         className="desc-item desc-closing"
                         style={{
                             marginTop: '8rem',
                             paddingTop: '3rem',
-                            borderTop: '1px solid rgba(255,255,255,0.045)',
+                            borderTop: '1px solid rgba(255,255,255,0.1)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
@@ -360,21 +304,21 @@ export default function DescSection() {
                             fontWeight: 300,
                             fontSize: '0.72rem',
                             fontStyle: 'italic',
-                            color: 'rgba(255,255,255,0.12)',
+                            color: 'rgba(255,255,255,0.35)',
                             letterSpacing: '0.06em',
                         }}>
                             Samarinda · East Kalimantan
                         </div>
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem' }}>
-                            <div style={{ height: '1px', width: '32px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.14))' }} />
+                            <div style={{ height: '1px', width: '32px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.22))' }} />
                             <div style={{
                                 width: '5px', height: '5px',
-                                border: '1px solid rgba(255,255,255,0.18)',
+                                border: '1px solid rgba(255,255,255,0.3)',
                                 transform: 'rotate(45deg)',
                                 flexShrink: 0,
                             }} />
-                            <div style={{ height: '1px', width: '32px', background: 'linear-gradient(to left, transparent, rgba(255,255,255,0.14))' }} />
+                            <div style={{ height: '1px', width: '32px', background: 'linear-gradient(to left, transparent, rgba(255,255,255,0.22))' }} />
                         </div>
                     </div>
                 </div>
