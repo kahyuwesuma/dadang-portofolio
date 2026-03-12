@@ -4,15 +4,11 @@ import { useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/components/providers/AuthProvider'
 import {
-  LayoutDashboard,
   BookOpen,
-  Heart,
-  BarChart3,
+  FileText,
   LogOut,
   Menu,
   X,
-  Settings,
-  Activity,
   Loader2,
 } from 'lucide-react'
 
@@ -42,10 +38,8 @@ export default function AdminLayoutContent({ children }: AdminLayoutContentProps
   }
 
   const menuItems = [
-    // { icon: LayoutDashboard, label: 'Dashboard', href: '/admin' },
     { icon: BookOpen, label: 'Publikasi', href: '/admin/publikasi' },
-    // { icon: Heart, label: 'Pengabdian', href: '/admin/pengabdian' },
-    // { icon: BarChart3, label: 'Statistik', href: '/admin/statistik' },
+    { icon: FileText, label: 'Deskripsi', href: '/admin/desc' }
   ]
 
   if (loading) {
@@ -99,8 +93,8 @@ export default function AdminLayoutContent({ children }: AdminLayoutContentProps
                     setSidebarOpen(false)
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
-                      ? 'bg-white text-black'
-                      : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
+                    ? 'bg-white text-black'
+                    : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
                     }`}
                 >
                   <Icon className="w-5 h-5" />
