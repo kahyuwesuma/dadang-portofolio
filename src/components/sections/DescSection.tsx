@@ -63,15 +63,15 @@ export default function DescSection() {
           content: '';
           position: absolute;
           left: -1.5rem; top: 0; bottom: 0;
-          width: 1px;
-          background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.14) 20%, rgba(255,255,255,0.14) 80%, transparent);
+          width: 1.5px;
+          background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.55) 20%, rgba(255,255,255,0.55) 80%, transparent);
           transform: scaleY(0);
           transform-origin: top;
           transition: transform 0.7s cubic-bezier(0.16,1,0.3,1);
         }
         .desc-para:hover::before { transform: scaleY(1); }
-        .desc-para:hover .desc-numeral { color: rgba(255,255,255,0.6) !important; transform: translateY(-2px); }
-        .desc-para:hover .desc-text   { color: rgba(255,255,255,0.9) !important; }
+        .desc-para:hover .desc-numeral { color: rgba(255,255,255,0.95) !important; transform: translateY(-2px); }
+        .desc-para:hover .desc-text   { color: rgba(255,255,255,1) !important; }
         .desc-text    { transition: color 0.6s cubic-bezier(0.16,1,0.3,1); }
         .desc-numeral { transition: color 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1); }
 
@@ -81,7 +81,7 @@ export default function DescSection() {
           position: absolute;
           bottom: -3px; left: 0;
           width: 0; height: 1px;
-          background: rgba(255,255,255,0.35);
+          background: rgba(255,255,255,0.65);
           transition: width 1.4s cubic-bezier(0.16,1,0.3,1) 0.2s;
         }
         .desc-visible .group-label-text::after { width: 100%; }
@@ -111,7 +111,7 @@ export default function DescSection() {
           .desc-label-index { font-size: 2.6rem !important; margin-bottom: 0 !important; line-height: 1 !important; }
           .desc-label-divider { display: none !important; }
           .desc-label-tag { display: flex; align-items: center; gap: 0.6rem; }
-          .desc-label-tag::before { content: ''; display: inline-block; width: 14px; height: 1px; background: rgba(255,255,255,0.32); flex-shrink: 0; }
+          .desc-label-tag::before { content: ''; display: inline-block; width: 14px; height: 1px; background: rgba(255,255,255,0.55); flex-shrink: 0; }
           .desc-para { grid-template-columns: 1.8rem 1fr !important; column-gap: 1rem !important; }
           .desc-para::before { left: -0.6rem; }
           .desc-text-p { font-size: 0.97rem !important; line-height: 1.88 !important; }
@@ -144,12 +144,11 @@ export default function DescSection() {
         <div className="desc-section-inner" style={{ maxWidth: '900px', margin: '0 auto', padding: '0 3rem', position: 'relative', zIndex: 1 }}>
 
           {loading ? (
-            // Skeleton placeholder
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               {[1,2,3].map(i => (
                 <div key={i} style={{
                   height: '1.1rem',
-                  background: 'rgba(255,255,255,0.04)',
+                  background: 'rgba(255,255,255,0.06)',
                   borderRadius: '2px',
                   width: i === 2 ? '70%' : '100%',
                   animation: 'pulse 2s ease-in-out infinite',
@@ -170,20 +169,37 @@ export default function DescSection() {
                 >
                   <div className="desc-label-col">
                     <div className="desc-item desc-label-inner" style={{ transitionDelay: '0.04s' }}>
+
+                      {/* Index number — bolder */}
                       <div className="desc-label-index" style={{
-                        fontFamily: '"Jost", sans-serif', fontWeight: 100, fontSize: '4.5rem',
-                        lineHeight: 1, color: 'rgba(255,255,255,0.08)', letterSpacing: '-0.02em',
-                        marginBottom: '1.4rem', userSelect: 'none',
+                        fontFamily: '"Jost", sans-serif',
+                        fontWeight: 100,
+                        fontSize: '4.5rem',
+                        lineHeight: 1,
+                        color: 'rgba(255,255,255,0.65)', /* was 0.08 */
+                        letterSpacing: '-0.02em',
+                        marginBottom: '1.4rem',
+                        userSelect: 'none',
                       }}>
                         {group.index}
                       </div>
+
+                      {/* Divider — brighter */}
                       <div className="desc-label-divider" style={{
-                        width: '20px', height: '1px', background: 'rgba(255,255,255,0.32)', marginBottom: '1.1rem',
+                        width: '20px', height: '1px',
+                        background: 'rgba(255,255,255,0.55)', /* was 0.32 */
+                        marginBottom: '1.1rem',
                       }} />
+
+                      {/* Section label — brighter, slightly heavier */}
                       <div className="desc-label-tag">
                         <span className="group-label-text" style={{
-                          fontFamily: '"Jost", sans-serif', fontWeight: 200, fontSize: '0.56rem',
-                          letterSpacing: '0.38em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)',
+                          fontFamily: '"Jost", sans-serif',
+                          fontWeight: 300, /* was 200 */
+                          fontSize: '0.58rem',
+                          letterSpacing: '0.36em',
+                          textTransform: 'uppercase',
+                          color: 'rgba(255,255,255,0.72)', /* was 0.50 */
                         }}>
                           {group.label}
                         </span>
@@ -200,25 +216,40 @@ export default function DescSection() {
                           key={pi}
                           className={`desc-item desc-para${!isLast ? ' desc-para-gap' : ''}`}
                           style={{
-                            position: 'relative', display: 'grid',
-                            gridTemplateColumns: '2.4rem 1fr', columnGap: '1.8rem',
+                            position: 'relative',
+                            display: 'grid',
+                            gridTemplateColumns: '2.4rem 1fr',
+                            columnGap: '1.8rem',
                             marginBottom: !isLast ? '3.4rem' : 0,
                             transitionDelay: `${0.1 + pi * 0.1}s`,
-                            cursor: 'default', paddingLeft: '0.2rem',
+                            cursor: 'default',
+                            paddingLeft: '0.2rem',
                           }}
                         >
+                          {/* Roman numeral — bolder */}
                           <div className="desc-numeral desc-numeral-text" style={{
-                            fontFamily: '"Cormorant Garamond", serif', fontWeight: 300,
-                            fontSize: '0.62rem', color: 'rgba(255,255,255,0.38)',
-                            letterSpacing: '0.08em', paddingTop: '0.52rem',
-                            textAlign: 'right', userSelect: 'none', lineHeight: 1,
+                            fontFamily: '"Cormorant Garamond", serif',
+                            fontWeight: 400, /* was 300 */
+                            fontSize: '0.68rem', /* was 0.62rem */
+                            color: 'rgba(255,255,255,0.55)', /* was 0.38 */
+                            letterSpacing: '0.08em',
+                            paddingTop: '0.52rem',
+                            textAlign: 'right',
+                            userSelect: 'none',
+                            lineHeight: 1,
                           }}>
                             {romanNumerals[absIndex]}
                           </div>
+
+                          {/* Body text — much brighter */}
                           <p className="desc-text desc-text-p" style={{
-                            fontFamily: '"EB Garamond", serif', fontWeight: 400,
-                            fontSize: '1.13rem', lineHeight: 2,
-                            color: 'rgba(255,255,255,0.78)', margin: 0, letterSpacing: '0.012em',
+                            fontFamily: '"EB Garamond", serif',
+                            fontWeight: 400,
+                            fontSize: '1.13rem',
+                            lineHeight: 2,
+                            color: 'rgba(255,255,255,0.92)', /* was 0.78 */
+                            margin: 0,
+                            letterSpacing: '0.012em',
                           }}>
                             {text}
                           </p>
@@ -231,25 +262,7 @@ export default function DescSection() {
             })
           )}
 
-          <div className="desc-item desc-closing" style={{
-            marginTop: '8rem', paddingTop: '3rem',
-            borderTop: '1px solid rgba(255,255,255,0.1)',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            flexWrap: 'wrap', gap: '1rem',
-          }}>
-            <div className="desc-closing-loc" style={{
-              fontFamily: '"Cormorant Garamond", serif', fontWeight: 300,
-              fontSize: '0.72rem', fontStyle: 'italic',
-              color: 'rgba(255,255,255,0.35)', letterSpacing: '0.06em',
-            }}>
-              Samarinda · East Kalimantan
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem' }}>
-              <div style={{ height: '1px', width: '32px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.22))' }} />
-              <div style={{ width: '5px', height: '5px', border: '1px solid rgba(255,255,255,0.3)', transform: 'rotate(45deg)', flexShrink: 0 }} />
-              <div style={{ height: '1px', width: '32px', background: 'linear-gradient(to left, transparent, rgba(255,255,255,0.22))' }} />
-            </div>
-          </div>
+          {/* Closing ornament */}
         </div>
       </section>
     </>

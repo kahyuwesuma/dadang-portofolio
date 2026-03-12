@@ -20,9 +20,9 @@ const FILTERS: { label: string; filter: FilterKategori }[] = [
 ];
 
 export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
-  const [searchTerm, setSearchTerm]   = useState('');
+  const [searchTerm, setSearchTerm]     = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterKategori>('all');
-  const [isFocused, setIsFocused]     = useState(false);
+  const [isFocused, setIsFocused]       = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const inputRef   = useRef<HTMLInputElement>(null);
 
@@ -83,14 +83,14 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
           position: absolute;
           bottom: -2px; left: 0;
           width: 0; height: 1px;
-          background: rgba(255,255,255,0.5);
+          background: rgba(255,255,255,0.75);
           transition: width 0.35s cubic-bezier(0.4,0,0.2,1);
         }
         .pub-filter-btn.active::after,
         .pub-filter-btn:hover::after { width: 100%; }
 
         .pub-search-input::placeholder {
-          color: rgba(255,255,255,0.35);
+          color: rgba(255,255,255,0.45);
           font-style: italic;
         }
         .pub-search-input:focus { outline: none; }
@@ -102,18 +102,16 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
         .pub-header   { animation: pubFadeIn 1s cubic-bezier(0.16,1,0.3,1) both; }
         .pub-controls { animation: pubFadeIn 1s cubic-bezier(0.16,1,0.3,1) 0.15s both; }
 
-        /* ── Filter bar ── */
         .pub-filter-bar {
           display: flex;
           align-items: baseline;
           flex-wrap: wrap;
           gap: 0;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
+          border-bottom: 1px solid rgba(255,255,255,0.18);
           padding-bottom: 1.2rem;
           row-gap: 0.5rem;
         }
 
-        /* ── Tablet (≤ 768px) ── */
         @media (max-width: 768px) {
           .pub-section-root  { padding: 7rem 0 9rem !important; }
           .pub-inner         { padding: 0 2rem !important; }
@@ -122,25 +120,18 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
           .pub-search-wrap   { margin-bottom: 2.2rem !important; max-width: 100% !important; }
         }
 
-        /* ── Mobile (≤ 480px) ── */
         @media (max-width: 480px) {
           .pub-section-root  { padding: 5.5rem 0 7rem !important; }
           .pub-inner         { padding: 0 1.25rem !important; }
           .pub-header-wrap   { margin-bottom: 3rem !important; }
           .pub-controls-wrap { margin-bottom: 2.5rem !important; }
           .pub-search-wrap   { margin-bottom: 2rem !important; }
-
-          /* Stack filter buttons more comfortably */
           .pub-filter-bar    { row-gap: 0.35rem; }
           .pub-filter-btn    { font-size: 0.92rem !important; }
-
-          /* Count badge pushed to its own line */
           .pub-count-badge   { width: 100%; margin-top: 0.6rem; text-align: right; }
-
           .pub-empty-wrap    { padding: 4rem 0 !important; }
         }
 
-        /* ── Tiny (≤ 360px) ── */
         @media (max-width: 360px) {
           .pub-inner       { padding: 0 1rem !important; }
           .pub-filter-btn  { font-size: 0.86rem !important; }
@@ -152,11 +143,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
         ref={sectionRef}
         id="publikasi"
         className="pub-section-root"
-        style={{
-          background: '#080806',
-          padding: '9rem 0 12rem',
-          position: 'relative',
-        }}
+        style={{ background: '#080806', padding: '9rem 0 12rem', position: 'relative' }}
       >
         <div className="pub-inner" style={{ maxWidth: '960px', margin: '0 auto', padding: '0 2.5rem' }}>
 
@@ -164,11 +151,11 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
           <div className="pub-header pub-header-wrap" style={{ marginBottom: '5rem' }}>
             <p style={{
               fontFamily: '"Jost", sans-serif',
-              fontWeight: 100,
-              fontSize: '0.58rem',
+              fontWeight: 200,        /* was 100 */
+              fontSize: '0.6rem',     /* was 0.58rem */
               letterSpacing: '0.45em',
               textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.45)',
+              color: 'rgba(255,255,255,0.72)', /* was 0.45 */
               marginBottom: '1.2rem',
             }}>
               Karya Akademik & Intelektual
@@ -186,10 +173,11 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
               Publikasi
             </h2>
 
+            {/* Diamond ornament — brighter */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ height: '1px', flex: 1, background: 'linear-gradient(to right, rgba(255,255,255,0.1), transparent)' }} />
-              <div style={{ width: '4px', height: '4px', border: '1px solid rgba(255,255,255,0.35)', transform: 'rotate(45deg)' }} />
-              <div style={{ height: '1px', width: '40px', background: 'rgba(255,255,255,0.12)' }} />
+              <div style={{ height: '1px', flex: 1, background: 'linear-gradient(to right, rgba(255,255,255,0.22), transparent)' }} /> {/* was 0.10 */}
+              <div style={{ width: '4px', height: '4px', border: '1px solid rgba(255,255,255,0.6)', transform: 'rotate(45deg)' }} /> {/* was 0.35 */}
+              <div style={{ height: '1px', width: '40px', background: 'rgba(255,255,255,0.22)' }} /> {/* was 0.12 */}
             </div>
           </div>
 
@@ -201,7 +189,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
               className="pub-search-wrap"
               style={{
                 position: 'relative',
-                borderBottom: `1px solid ${isFocused ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.15)'}`,
+                borderBottom: `1px solid ${isFocused ? 'rgba(255,255,255,0.65)' : 'rgba(255,255,255,0.28)'}`, /* was 0.40 / 0.15 */
                 transition: 'border-color 0.3s ease',
                 marginBottom: '3rem',
                 paddingBottom: '0.1rem',
@@ -226,7 +214,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                   fontStyle: searchTerm ? 'normal' : 'italic',
                   fontSize: '1.05rem',
                   letterSpacing: '0.02em',
-                  color: 'rgba(255,255,255,0.75)',
+                  color: 'rgba(255,255,255,0.92)', /* was 0.75 */
                   padding: '0.4rem 1.8rem 0.4rem 0',
                 }}
               />
@@ -239,15 +227,11 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                     background: 'none', border: 'none', cursor: 'pointer',
                     fontFamily: '"Cormorant Garamond", serif',
                     fontSize: '1.1rem',
-                    color: 'rgba(255,255,255,0.45)',
+                    color: 'rgba(255,255,255,0.65)', /* was 0.45 */
                     lineHeight: 1,
                     padding: '0.2rem',
-                    /* Larger tap target on mobile */
-                    minWidth: '2rem',
-                    minHeight: '2rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    minWidth: '2rem', minHeight: '2rem',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}
                 >
                   ×
@@ -264,7 +248,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                   <React.Fragment key={filter}>
                     {i > 0 && (
                       <span style={{
-                        color: 'rgba(255,255,255,0.25)',
+                        color: 'rgba(255,255,255,0.38)', /* was 0.25 */
                         fontFamily: '"Cormorant Garamond", serif',
                         fontSize: '0.9rem',
                         padding: '0 0.5rem',
@@ -283,12 +267,9 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                         fontStyle: isActive ? 'normal' : 'italic',
                         fontSize: '1rem',
                         letterSpacing: '0.03em',
-                        color: isActive ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.52)',
+                        color: isActive ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.68)', /* was 0.95 / 0.52 */
                         padding: '0.1rem 0',
-                        display: 'inline-flex',
-                        alignItems: 'baseline',
-                        gap: '0.3rem',
-                        /* Comfortable tap target */
+                        display: 'inline-flex', alignItems: 'baseline', gap: '0.3rem',
                         minHeight: '2.2rem',
                       }}
                     >
@@ -298,7 +279,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                         fontWeight: 200,
                         fontSize: '0.5rem',
                         letterSpacing: '0.05em',
-                        color: isActive ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.3)',
+                        color: isActive ? 'rgba(255,255,255,0.72)' : 'rgba(255,255,255,0.45)', /* was 0.50 / 0.30 */
                         verticalAlign: 'super',
                         lineHeight: 0,
                       }}>
@@ -309,7 +290,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                 );
               })}
 
-              {/* Result count — right aligned, wraps to own line on tiny screens */}
+              {/* Result count */}
               <span
                 className="pub-count-badge"
                 style={{
@@ -319,7 +300,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                   fontSize: '0.6rem',
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
-                  color: 'rgba(255,255,255,0.35)',
+                  color: 'rgba(255,255,255,0.55)', /* was 0.35 */
                   alignSelf: 'center',
                 }}
               >
@@ -347,7 +328,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                   fontWeight: 300,
                   fontStyle: 'italic',
                   fontSize: 'clamp(1.1rem, 3vw, 1.3rem)',
-                  color: 'rgba(255,255,255,0.4)',
+                  color: 'rgba(255,255,255,0.6)', /* was 0.4 */
                   marginBottom: '1.5rem',
                 }}>
                   Tidak ada publikasi ditemukan
@@ -361,13 +342,12 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                       fontSize: '0.65rem',
                       letterSpacing: '0.2em',
                       textTransform: 'uppercase',
-                      color: 'rgba(255,255,255,0.45)',
+                      color: 'rgba(255,255,255,0.65)', /* was 0.45 */
                       background: 'none',
-                      border: '1px solid rgba(255,255,255,0.18)',
+                      border: '1px solid rgba(255,255,255,0.3)', /* was 0.18 */
                       borderRadius: '2px',
                       padding: '0.6rem 1.4rem',
                       cursor: 'pointer',
-                      /* Comfortable tap target */
                       minHeight: '2.4rem',
                     }}
                   >

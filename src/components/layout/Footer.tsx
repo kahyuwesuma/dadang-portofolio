@@ -50,7 +50,7 @@ export default function Footer() {
               textTransform: 'uppercase',
               color: 'rgba(255,255,255,0.35)',
             }}>
-              Universitas Mulawarman · FISIP
+              Universitas Mulawarman · Fakultas Ilmu Sosial dan Ilmu Politik
             </p>
           </div>
 

@@ -7,8 +7,8 @@ const contacts = [
   {
     icon: Mail,
     label: 'Email',
-    value: 'dadang@fisip.unmul.ac.id',
-    href: 'mailto:dadang@fisip.unmul.ac.id',
+    value: 'dadangmujiono@fisip.unmul.ac.id',
+    href: 'mailto:dadangmujiono@fisip.unmul.ac.id',
     note: 'Korespondensi akademik',
   },
   {
@@ -22,7 +22,7 @@ const contacts = [
     icon: Linkedin,
     label: 'LinkedIn',
     value: 'Jaringan Profesional',
-    href: 'https://linkedin.com',
+    href: 'https://www.linkedin.com/in/dadang-ilham-k-mujiono-308b01160/?originalSubdomain=id',
     note: 'Koneksi profesional',
   },
 ];
