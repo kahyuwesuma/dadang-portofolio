@@ -4,17 +4,22 @@ import React, { useState, useMemo } from 'react';
 import SearchBox from '@/components/ui/SearchBox';
 import FilterButton from '@/components/ui/FilterButton';
 import PublikasiCard from '@/components/cards/PublikasiCard';
-import type { Publikasi, FilterKategori } from '@/lib/types';
+import type { Publikasi, PublikasiKategori } from '@/lib/types';
 
 interface PublikasiSectionProps {
   publikasi: Publikasi[];
 }
 
-// Normalize function to handle any case from database
-function normalizeKategori(kategori: string | undefined): string {
-  if (!kategori) return '';
-  return kategori.trim();
-}
+type FilterKategori = 'all' | PublikasiKategori;
+
+const filterButtons: { label: string; filter: FilterKategori }[] = [
+  { label: 'Semua',            filter: 'all' },
+  { label: 'Jurnal',           filter: 'Jurnal' },
+  { label: 'Buku',             filter: 'Buku' },
+  { label: 'Op-ed',            filter: 'Op-ed' },
+  { label: 'Media Appearance', filter: 'Media Appearance' },
+  { label: 'Theses',           filter: 'Theses' },
+];
 
 export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,14 +29,9 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
     const searchLower = searchTerm.toLowerCase();
 
     return publikasi.filter((pub) => {
-      // Normalize kategori from database
-      const kategoriNormalized = normalizeKategori(pub.kategori);
-
-      // Check filter match
       const matchesFilter =
-        activeFilter === 'all' || kategoriNormalized === activeFilter;
+        activeFilter === 'all' || pub.kategori === activeFilter;
 
-      // Check search match
       const matchesSearch =
         searchTerm === '' ||
         pub.judul.toLowerCase().includes(searchLower) ||
@@ -42,15 +42,6 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
       return matchesFilter && matchesSearch;
     });
   }, [publikasi, searchTerm, activeFilter]);
-
-  const filterButtons: { label: string; filter: FilterKategori }[] = [
-    { label: 'Semua', filter: 'all' },
-    { label: 'Jurnal', filter: 'jurnal' },
-    { label: 'Buku', filter: 'buku' },
-    { label: 'Op-ed', filter: 'opeds' },
-    { label: 'Media Appearance', filter: 'media' },
-    { label: 'Theses', filter: 'theses' },
-  ];
 
   return (
     <section id="publikasi" className="py-24">
@@ -75,7 +66,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
               <FilterButton
                 key={button.filter}
                 label={button.label}
-                filter={button.filter}
+                filter={button.filter as any}
                 isActive={activeFilter === button.filter}
                 onClick={() => setActiveFilter(button.filter)}
               />
@@ -83,12 +74,12 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
           </div>
 
           <div className="text-sm text-zinc-500">
-            Menampilkan <span id="resultCount">{filteredPublikasi.length}</span> publikasi
+            Menampilkan <span>{filteredPublikasi.length}</span> publikasi
           </div>
         </div>
 
         {/* Publications List */}
-        <div className="space-y-6" id="publikasiList">
+        <div className="space-y-6">
           {filteredPublikasi.length > 0 ? (
             filteredPublikasi.map((pub) => (
               <PublikasiCard key={pub.id} publikasi={pub} />
