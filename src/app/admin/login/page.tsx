@@ -22,7 +22,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (!authLoading && user) {
-            router.replace('/admin')
+            router.replace('/admin/publikasi')
         }
     }, [authLoading, user, router])
 
@@ -46,13 +46,13 @@ export default function LoginPage() {
 
         const result = await signIn(formData.email, formData.password)
 
-        if (!result.success) {
+        if (!result.success) { 
             setError(result.error || 'Failed to sign in')
             setLoading(false)
             return
         }
 
-        router.replace('/admin')
+        router.replace('/admin/publikasi')
     }
 
     if (authLoading) {

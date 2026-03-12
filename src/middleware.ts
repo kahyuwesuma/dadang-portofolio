@@ -25,13 +25,12 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession()
 
-  // ❌ BELUM LOGIN → hanya boleh ke /admin/login
   if (!session && pathname.startsWith('/admin') && pathname !== '/admin/login') {
     return NextResponse.redirect(new URL('/admin/login', req.url))
   }
 
   if (session && pathname === '/admin/login') {
-    return NextResponse.redirect(new URL('/admin', req.url))
+    return NextResponse.redirect(new URL('/admin/publikasi', req.url))
   }
 
   return res

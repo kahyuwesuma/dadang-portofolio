@@ -32,7 +32,7 @@ export default function AdminLayoutContent({ children }: AdminLayoutContentProps
     }
 
     if (!loading && user && pathname === '/admin/login') {
-      router.replace('/admin')
+      router.replace('/admin/publikasi')
     }
   }, [loading, user, pathname, router])
 
@@ -59,19 +59,16 @@ export default function AdminLayoutContent({ children }: AdminLayoutContentProps
     )
   }
 
-  // 🔓 Login page tidak pakai layout admin
   if (pathname === '/admin/login') {
     return <>{children}</>
   }
 
-  // 🛑 Belum login → tunggu redirect
   if (!user) {
     return null
   }
 
   return (
     <div className="min-h-screen bg-zinc-950">
-      {/* Overlay mobile */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
@@ -79,7 +76,6 @@ export default function AdminLayoutContent({ children }: AdminLayoutContentProps
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-full w-64 bg-zinc-900 border-r border-zinc-800 z-50 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           } lg:translate-x-0`}
@@ -130,7 +126,6 @@ export default function AdminLayoutContent({ children }: AdminLayoutContentProps
         </div>
       </aside>
 
-      {/* Main */}
       <div className="lg:pl-64">
         <header className="sticky top-0 z-30 bg-zinc-900/95 backdrop-blur-sm border-b border-zinc-800">
           <div className="flex items-center justify-between px-6 py-4">
