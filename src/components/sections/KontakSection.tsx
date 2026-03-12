@@ -46,10 +46,78 @@ export default function KontakSection() {
           transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
           display: inline-block;
         }
+
+        /* ── Contact row: desktop 3-col grid ── */
+        .kontak-row {
+          display: grid;
+          grid-template-columns: 10rem 1fr auto;
+          align-items: center;
+          column-gap: 3rem;
+          padding: 2rem 0;
+          border-top: 1px solid rgba(255,255,255,0.08);
+          text-decoration: none;
+        }
+        .kontak-row-last {
+          border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* ── Footer closing ── */
+        .kontak-footer {
+          margin-top: 7rem;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 1rem;
+        }
+
+        /* ── Tablet (≤ 768px) ── */
+        @media (max-width: 768px) {
+          .kontak-section-root { padding: 7rem 0 8rem !important; }
+          .kontak-inner        { padding: 0 2rem !important; }
+          .kontak-header       { margin-bottom: 3.5rem !important; }
+
+          .kontak-row {
+            grid-template-columns: 1fr auto;
+            grid-template-rows: auto auto;
+            row-gap: 0.6rem;
+            column-gap: 1.5rem;
+            padding: 1.6rem 0;
+          }
+          /* Label col spans full width on first row */
+          .kontak-meta  { grid-column: 1; grid-row: 1; }
+          .kontak-value { grid-column: 1; grid-row: 2; }
+          .kontak-arrow-wrap { grid-column: 2; grid-row: 1 / 3; align-self: center; }
+
+          .kontak-footer { margin-top: 5rem; }
+        }
+
+        /* ── Mobile (≤ 480px) ── */
+        @media (max-width: 480px) {
+          .kontak-section-root { padding: 5.5rem 0 6.5rem !important; }
+          .kontak-inner        { padding: 0 1.25rem !important; }
+          .kontak-header       { margin-bottom: 3rem !important; }
+
+          .kontak-row {
+            padding: 1.4rem 0;
+            column-gap: 1rem;
+          }
+          .kontak-value-text { font-size: 1.08rem !important; }
+          .kontak-note-text  { font-size: 0.78rem !important; }
+          .kontak-footer     { margin-top: 4rem; }
+          .kontak-footer-loc { font-size: 0.68rem !important; }
+        }
+
+        /* ── Tiny (≤ 360px) ── */
+        @media (max-width: 360px) {
+          .kontak-inner { padding: 0 1rem !important; }
+          .kontak-value-text { font-size: 1rem !important; }
+        }
       `}</style>
 
       <section
         id="kontak"
+        className="kontak-section-root"
         style={{
           background: '#080806',
           padding: '9rem 0 10rem',
@@ -67,10 +135,10 @@ export default function KontakSection() {
           <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to left, transparent, rgba(255,255,255,0.07))' }} />
         </div>
 
-        <div style={{ maxWidth: '960px', margin: '0 auto', padding: '0 2.5rem' }}>
+        <div className="kontak-inner" style={{ maxWidth: '960px', margin: '0 auto', padding: '0 2.5rem' }}>
 
           {/* Header */}
-          <div style={{ marginBottom: '5rem' }}>
+          <div className="kontak-header" style={{ marginBottom: '5rem' }}>
             <p style={{
               fontFamily: '"Jost", sans-serif',
               fontWeight: 100,
@@ -86,7 +154,7 @@ export default function KontakSection() {
             <h2 style={{
               fontFamily: '"Cormorant Garamond", serif',
               fontWeight: 300,
-              fontSize: 'clamp(2.8rem, 5vw, 4.5rem)',
+              fontSize: 'clamp(2.4rem, 6vw, 4.5rem)',
               color: '#ffffff',
               lineHeight: 1.05,
               letterSpacing: '-0.01em',
@@ -100,7 +168,7 @@ export default function KontakSection() {
               fontFamily: '"Cormorant Garamond", serif',
               fontWeight: 300,
               fontStyle: 'italic',
-              fontSize: '1.15rem',
+              fontSize: 'clamp(1rem, 2.5vw, 1.15rem)',
               lineHeight: 1.8,
               color: 'rgba(255,255,255,0.58)',
               maxWidth: '520px',
@@ -115,26 +183,17 @@ export default function KontakSection() {
           <div>
             {contacts.map((contact, i) => {
               const Icon = contact.icon;
+              const isLast = i === contacts.length - 1;
               return (
                 <a
                   key={contact.label}
                   href={contact.href}
                   target={contact.href.startsWith('http') ? '_blank' : undefined}
                   rel={contact.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  className="kontak-link"
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '10rem 1fr auto',
-                    alignItems: 'center',
-                    columnGap: '3rem',
-                    padding: '2rem 0',
-                    borderTop: '1px solid rgba(255,255,255,0.08)',
-                    borderBottom: i === contacts.length - 1 ? '1px solid rgba(255,255,255,0.08)' : 'none',
-                    textDecoration: 'none',
-                  }}
+                  className={`kontak-link kontak-row${isLast ? ' kontak-row-last' : ''}`}
                 >
-                  {/* Index + icon */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  {/* Meta: index + icon + label */}
+                  <div className="kontak-meta" style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
                     <span style={{
                       fontFamily: '"Jost", sans-serif',
                       fontWeight: 100,
@@ -142,11 +201,12 @@ export default function KontakSection() {
                       letterSpacing: '0.15em',
                       color: 'rgba(255,255,255,0.3)',
                       fontVariantNumeric: 'tabular-nums',
+                      flexShrink: 0,
                     }}>
                       0{i + 1}
                     </span>
                     <div style={{
-                      width: '32px', height: '32px',
+                      width: '30px', height: '30px',
                       border: '1px solid rgba(255,255,255,0.15)',
                       borderRadius: '50%',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -166,19 +226,20 @@ export default function KontakSection() {
                     </span>
                   </div>
 
-                  {/* Main value */}
-                  <div>
-                    <p style={{
+                  {/* Main value + note */}
+                  <div className="kontak-value">
+                    <p className="kontak-value-text" style={{
                       fontFamily: '"Cormorant Garamond", serif',
                       fontWeight: 400,
                       fontSize: '1.25rem',
                       color: 'rgba(255,255,255,0.88)',
                       margin: '0 0 0.2rem',
                       letterSpacing: '0.01em',
+                      wordBreak: 'break-word',
                     }}>
                       {contact.value}
                     </p>
-                    <p style={{
+                    <p className="kontak-note-text" style={{
                       fontFamily: '"Cormorant Garamond", serif',
                       fontWeight: 300,
                       fontStyle: 'italic',
@@ -191,32 +252,30 @@ export default function KontakSection() {
                   </div>
 
                   {/* Arrow */}
-                  <span className="kontak-arrow" style={{
-                    fontFamily: '"Cormorant Garamond", serif',
-                    fontSize: '1.3rem',
-                    color: 'rgba(255,255,255,0.35)',
-                  }}>
-                    →
-                  </span>
+                  <div className="kontak-arrow-wrap">
+                    <span className="kontak-arrow" style={{
+                      fontFamily: '"Cormorant Garamond", serif',
+                      fontSize: '1.3rem',
+                      color: 'rgba(255,255,255,0.35)',
+                    }}>
+                      →
+                    </span>
+                  </div>
                 </a>
               );
             })}
           </div>
 
           {/* Footer closing */}
-          <div style={{
-            marginTop: '7rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-            <p style={{
+          <div className="kontak-footer">
+            <p className="kontak-footer-loc" style={{
               fontFamily: '"Cormorant Garamond", serif',
               fontWeight: 300,
               fontStyle: 'italic',
               fontSize: '0.78rem',
               color: 'rgba(255,255,255,0.3)',
               letterSpacing: '0.04em',
+              margin: 0,
             }}>
               Samarinda · East Kalimantan · Indonesia
             </p>

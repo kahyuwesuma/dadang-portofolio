@@ -20,11 +20,11 @@ const FILTERS: { label: string; filter: FilterKategori }[] = [
 ];
 
 export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm]   = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterKategori>('all');
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused]     = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef   = useRef<HTMLInputElement>(null);
 
   const filteredPublikasi = useMemo(() => {
     const q = searchTerm.toLowerCase();
@@ -33,7 +33,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
       const matchesSearch = !searchTerm ||
         pub.judul.toLowerCase().includes(q) ||
         pub.penulis.toLowerCase().includes(q) ||
-        (pub.keywords && pub.keywords.toLowerCase().includes(q)) ||
+        (pub.keywords  && pub.keywords.toLowerCase().includes(q)) ||
         (pub.deskripsi && pub.deskripsi.toLowerCase().includes(q));
       return matchesFilter && matchesSearch;
     });
@@ -49,7 +49,13 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
     const items = sectionRef.current?.querySelectorAll('.pub-item');
     if (!items) return;
     const observer = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) { (e.target as HTMLElement).style.opacity = '1'; (e.target as HTMLElement).style.transform = 'none'; observer.unobserve(e.target); } }),
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) {
+          (e.target as HTMLElement).style.opacity = '1';
+          (e.target as HTMLElement).style.transform = 'none';
+          observer.unobserve(e.target);
+        }
+      }),
       { threshold: 0.04 }
     );
     items.forEach(el => observer.observe(el));
@@ -64,7 +70,8 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
         .pub-item {
           opacity: 0;
           transform: translateY(16px);
-          transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+          transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+                      transform 0.9s cubic-bezier(0.16,1,0.3,1);
         }
 
         .pub-filter-btn {
@@ -74,10 +81,8 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
         .pub-filter-btn::after {
           content: '';
           position: absolute;
-          bottom: -2px;
-          left: 0;
-          width: 0;
-          height: 1px;
+          bottom: -2px; left: 0;
+          width: 0; height: 1px;
           background: rgba(255,255,255,0.5);
           transition: width 0.35s cubic-bezier(0.4,0,0.2,1);
         }
@@ -88,30 +93,75 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
           color: rgba(255,255,255,0.35);
           font-style: italic;
         }
-
         .pub-search-input:focus { outline: none; }
 
         @keyframes pubFadeIn {
           from { opacity: 0; transform: translateY(12px); }
           to   { opacity: 1; transform: none; }
         }
-        .pub-header { animation: pubFadeIn 1s cubic-bezier(0.16,1,0.3,1) both; }
+        .pub-header   { animation: pubFadeIn 1s cubic-bezier(0.16,1,0.3,1) both; }
         .pub-controls { animation: pubFadeIn 1s cubic-bezier(0.16,1,0.3,1) 0.15s both; }
+
+        /* ── Filter bar ── */
+        .pub-filter-bar {
+          display: flex;
+          align-items: baseline;
+          flex-wrap: wrap;
+          gap: 0;
+          border-bottom: 1px solid rgba(255,255,255,0.1);
+          padding-bottom: 1.2rem;
+          row-gap: 0.5rem;
+        }
+
+        /* ── Tablet (≤ 768px) ── */
+        @media (max-width: 768px) {
+          .pub-section-root  { padding: 7rem 0 9rem !important; }
+          .pub-inner         { padding: 0 2rem !important; }
+          .pub-header-wrap   { margin-bottom: 3.8rem !important; }
+          .pub-controls-wrap { margin-bottom: 3rem !important; }
+          .pub-search-wrap   { margin-bottom: 2.2rem !important; max-width: 100% !important; }
+        }
+
+        /* ── Mobile (≤ 480px) ── */
+        @media (max-width: 480px) {
+          .pub-section-root  { padding: 5.5rem 0 7rem !important; }
+          .pub-inner         { padding: 0 1.25rem !important; }
+          .pub-header-wrap   { margin-bottom: 3rem !important; }
+          .pub-controls-wrap { margin-bottom: 2.5rem !important; }
+          .pub-search-wrap   { margin-bottom: 2rem !important; }
+
+          /* Stack filter buttons more comfortably */
+          .pub-filter-bar    { row-gap: 0.35rem; }
+          .pub-filter-btn    { font-size: 0.92rem !important; }
+
+          /* Count badge pushed to its own line */
+          .pub-count-badge   { width: 100%; margin-top: 0.6rem; text-align: right; }
+
+          .pub-empty-wrap    { padding: 4rem 0 !important; }
+        }
+
+        /* ── Tiny (≤ 360px) ── */
+        @media (max-width: 360px) {
+          .pub-inner       { padding: 0 1rem !important; }
+          .pub-filter-btn  { font-size: 0.86rem !important; }
+          .pub-search-text { font-size: 0.95rem !important; }
+        }
       `}</style>
 
       <section
         ref={sectionRef}
         id="publikasi"
+        className="pub-section-root"
         style={{
           background: '#080806',
           padding: '9rem 0 12rem',
           position: 'relative',
         }}
       >
-        <div style={{ maxWidth: '960px', margin: '0 auto', padding: '0 2.5rem' }}>
+        <div className="pub-inner" style={{ maxWidth: '960px', margin: '0 auto', padding: '0 2.5rem' }}>
 
           {/* ── Header ── */}
-          <div className="pub-header" style={{ marginBottom: '5rem' }}>
+          <div className="pub-header pub-header-wrap" style={{ marginBottom: '5rem' }}>
             <p style={{
               fontFamily: '"Jost", sans-serif',
               fontWeight: 100,
@@ -127,7 +177,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
             <h2 style={{
               fontFamily: '"Cormorant Garamond", serif',
               fontWeight: 300,
-              fontSize: 'clamp(3rem, 6vw, 5rem)',
+              fontSize: 'clamp(2.6rem, 7vw, 5rem)',
               color: '#ffffff',
               lineHeight: 1,
               letterSpacing: '-0.01em',
@@ -136,30 +186,28 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
               Publikasi
             </h2>
 
-            {/* Ornamental divider */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <div style={{ height: '1px', flex: 1, background: 'linear-gradient(to right, rgba(255,255,255,0.1), transparent)' }} />
-              <div style={{
-                width: '4px', height: '4px',
-                border: '1px solid rgba(255,255,255,0.35)',
-                transform: 'rotate(45deg)',
-              }} />
+              <div style={{ width: '4px', height: '4px', border: '1px solid rgba(255,255,255,0.35)', transform: 'rotate(45deg)' }} />
               <div style={{ height: '1px', width: '40px', background: 'rgba(255,255,255,0.12)' }} />
             </div>
           </div>
 
           {/* ── Controls ── */}
-          <div className="pub-controls" style={{ marginBottom: '4rem' }}>
+          <div className="pub-controls pub-controls-wrap" style={{ marginBottom: '4rem' }}>
 
             {/* Search */}
-            <div style={{
-              position: 'relative',
-              borderBottom: `1px solid ${isFocused ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.15)'}`,
-              transition: 'border-color 0.3s ease',
-              marginBottom: '3rem',
-              paddingBottom: '0.1rem',
-              maxWidth: '480px',
-            }}>
+            <div
+              className="pub-search-wrap"
+              style={{
+                position: 'relative',
+                borderBottom: `1px solid ${isFocused ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.15)'}`,
+                transition: 'border-color 0.3s ease',
+                marginBottom: '3rem',
+                paddingBottom: '0.1rem',
+                maxWidth: '480px',
+              }}
+            >
               <input
                 ref={inputRef}
                 type="text"
@@ -168,7 +216,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 placeholder="Cari judul, penulis, kata kunci…"
-                className="pub-search-input"
+                className="pub-search-input pub-search-text"
                 style={{
                   width: '100%',
                   background: 'transparent',
@@ -186,13 +234,20 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                 <button
                   onClick={() => { setSearchTerm(''); inputRef.current?.focus(); }}
                   style={{
-                    position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)',
+                    position: 'absolute', right: 0, top: '50%',
+                    transform: 'translateY(-50%)',
                     background: 'none', border: 'none', cursor: 'pointer',
                     fontFamily: '"Cormorant Garamond", serif',
                     fontSize: '1.1rem',
                     color: 'rgba(255,255,255,0.45)',
                     lineHeight: 1,
                     padding: '0.2rem',
+                    /* Larger tap target on mobile */
+                    minWidth: '2rem',
+                    minHeight: '2rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
                 >
                   ×
@@ -201,14 +256,7 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
             </div>
 
             {/* Filters */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'baseline',
-              gap: '0',
-              flexWrap: 'wrap',
-              borderBottom: '1px solid rgba(255,255,255,0.1)',
-              paddingBottom: '1.2rem',
-            }}>
+            <div className="pub-filter-bar">
               {FILTERS.map(({ label, filter }, i) => {
                 const isActive = activeFilter === filter;
                 const count = counts[filter] ?? 0;
@@ -219,13 +267,13 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                         color: 'rgba(255,255,255,0.25)',
                         fontFamily: '"Cormorant Garamond", serif',
                         fontSize: '0.9rem',
-                        padding: '0 0.6rem',
+                        padding: '0 0.5rem',
                         userSelect: 'none',
                       }}>·</span>
                     )}
                     <button
                       onClick={() => setActiveFilter(filter)}
-                      className={`pub-filter-btn ${isActive ? 'active' : ''}`}
+                      className={`pub-filter-btn${isActive ? ' active' : ''}`}
                       style={{
                         background: 'none',
                         border: 'none',
@@ -240,6 +288,8 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                         display: 'inline-flex',
                         alignItems: 'baseline',
                         gap: '0.3rem',
+                        /* Comfortable tap target */
+                        minHeight: '2.2rem',
                       }}
                     >
                       {label}
@@ -259,16 +309,20 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                 );
               })}
 
-              {/* Result count — right aligned */}
-              <span style={{
-                marginLeft: 'auto',
-                fontFamily: '"Jost", sans-serif',
-                fontWeight: 100,
-                fontSize: '0.6rem',
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.35)',
-              }}>
+              {/* Result count — right aligned, wraps to own line on tiny screens */}
+              <span
+                className="pub-count-badge"
+                style={{
+                  marginLeft: 'auto',
+                  fontFamily: '"Jost", sans-serif',
+                  fontWeight: 100,
+                  fontSize: '0.6rem',
+                  letterSpacing: '0.2em',
+                  textTransform: 'uppercase',
+                  color: 'rgba(255,255,255,0.35)',
+                  alignSelf: 'center',
+                }}
+              >
                 {filteredPublikasi.length} entri
               </span>
             </div>
@@ -287,12 +341,12 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                 </div>
               ))
             ) : (
-              <div className="pub-item" style={{ padding: '6rem 0', textAlign: 'center' }}>
+              <div className="pub-item pub-empty-wrap" style={{ padding: '6rem 0', textAlign: 'center' }}>
                 <p style={{
                   fontFamily: '"Cormorant Garamond", serif',
                   fontWeight: 300,
                   fontStyle: 'italic',
-                  fontSize: '1.3rem',
+                  fontSize: 'clamp(1.1rem, 3vw, 1.3rem)',
                   color: 'rgba(255,255,255,0.4)',
                   marginBottom: '1.5rem',
                 }}>
@@ -311,8 +365,10 @@ export default function PublikasiSection({ publikasi }: PublikasiSectionProps) {
                       background: 'none',
                       border: '1px solid rgba(255,255,255,0.18)',
                       borderRadius: '2px',
-                      padding: '0.5rem 1.2rem',
+                      padding: '0.6rem 1.4rem',
                       cursor: 'pointer',
+                      /* Comfortable tap target */
+                      minHeight: '2.4rem',
                     }}
                   >
                     Reset

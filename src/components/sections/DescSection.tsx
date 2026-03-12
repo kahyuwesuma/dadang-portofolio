@@ -76,6 +76,7 @@ export default function DescSection() {
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@100;200;300;400&display=swap');
 
+                /* ── Fade-in animation ── */
                 .desc-item {
                     opacity: 0;
                     transform: translateY(28px);
@@ -87,6 +88,7 @@ export default function DescSection() {
                     transform: translateY(0);
                 }
 
+                /* ── Paragraph left-border hover ── */
                 .desc-para::before {
                     content: '';
                     position: absolute;
@@ -112,6 +114,7 @@ export default function DescSection() {
                 .desc-text    { transition: color 0.6s cubic-bezier(0.16,1,0.3,1); }
                 .desc-numeral { transition: color 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1); }
 
+                /* ── Label underline animation ── */
                 .group-label-text { position: relative; display: inline-block; }
                 .group-label-text::after {
                     content: '';
@@ -123,6 +126,7 @@ export default function DescSection() {
                 }
                 .desc-visible .group-label-text::after { width: 100%; }
 
+                /* ── Layout: Desktop (> 900px) ── */
                 .desc-group {
                     display: grid;
                     grid-template-columns: 11rem 1fr;
@@ -131,26 +135,89 @@ export default function DescSection() {
                 .desc-label-col { display: block; }
                 .desc-label-inner { position: sticky; top: 7rem; }
 
-                @media (max-width: 640px) {
-                    .desc-group { display: block; }
-                    .desc-label-col { margin-bottom: 2rem; }
-                    .desc-label-inner { position: static; display: flex; align-items: center; gap: 1rem; }
-                    .desc-label-index { font-size: 2.8rem !important; margin-bottom: 0 !important; }
-                    .desc-label-divider { display: none !important; }
-                    .desc-para-grid { grid-template-columns: 1.6rem 1fr !important; column-gap: 1rem !important; }
-                    .desc-para::before { left: -0.8rem; }
-                    .desc-text-p { font-size: 1rem !important; line-height: 1.85 !important; }
-                    .desc-section-inner { padding: 0 1.4rem !important; }
-                    .desc-section-root { padding: 6rem 0 8rem !important; }
-                    .desc-group-gap { margin-bottom: 5.5rem !important; }
-                    .desc-closing { margin-top: 5rem !important; }
+                /* ── Layout: Tablet (641px – 900px) ── */
+                @media (min-width: 641px) and (max-width: 900px) {
+                    .desc-section-root  { padding: 7rem 0 9rem !important; }
+                    .desc-section-inner { padding: 0 2.2rem !important; }
+
+                    .desc-group {
+                        grid-template-columns: 8rem 1fr;
+                        column-gap: 2.5rem;
+                    }
+                    .desc-label-inner   { position: sticky; top: 5rem; }
+                    .desc-label-index   { font-size: 3.2rem !important; margin-bottom: 1rem !important; }
+                    .desc-label-divider { margin-bottom: 0.8rem !important; }
+                    .desc-group-gap     { margin-bottom: 6.5rem !important; }
+
+                    .desc-text-p {
+                        font-size: 1.05rem !important;
+                        line-height: 1.95 !important;
+                    }
+                    .desc-para-gap { margin-bottom: 2.8rem !important; }
                 }
 
-                @media (min-width: 641px) and (max-width: 900px) {
-                    .desc-group { grid-template-columns: 8rem 1fr; column-gap: 2.5rem; }
-                    .desc-label-index { font-size: 3rem !important; }
-                    .desc-text-p { font-size: 1.05rem !important; }
-                    .desc-section-inner { padding: 0 2rem !important; }
+                /* ── Layout: Mobile (≤ 640px) ── */
+                @media (max-width: 640px) {
+                    .desc-section-root  { padding: 5rem 0 7rem !important; }
+                    .desc-section-inner { padding: 0 1.25rem !important; }
+
+                    /* Switch to single-column stacked layout */
+                    .desc-group         { display: block; }
+                    .desc-label-col     { margin-bottom: 1.6rem; }
+
+                    /* Horizontal label row on mobile */
+                    .desc-label-inner {
+                        position: static;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.85rem;
+                    }
+                    .desc-label-index   {
+                        font-size: 2.6rem !important;
+                        margin-bottom: 0 !important;
+                        line-height: 1 !important;
+                    }
+                    .desc-label-divider { display: none !important; }
+                    .desc-label-tag {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.6rem;
+                    }
+                    .desc-label-tag::before {
+                        content: '';
+                        display: inline-block;
+                        width: 14px;
+                        height: 1px;
+                        background: rgba(255,255,255,0.32);
+                        flex-shrink: 0;
+                    }
+
+                    /* Paragraph layout */
+                    .desc-para {
+                        grid-template-columns: 1.8rem 1fr !important;
+                        column-gap: 1rem !important;
+                    }
+                    .desc-para::before { left: -0.6rem; }
+
+                    .desc-text-p {
+                        font-size: 0.97rem !important;
+                        line-height: 1.88 !important;
+                    }
+                    .desc-numeral-text {
+                        font-size: 0.58rem !important;
+                        padding-top: 0.42rem !important;
+                    }
+                    .desc-para-gap     { margin-bottom: 2.4rem !important; }
+                    .desc-group-gap    { margin-bottom: 4.5rem !important; }
+                    .desc-closing      { margin-top: 4.5rem !important; padding-top: 2rem !important; }
+                    .desc-closing-loc  { font-size: 0.65rem !important; }
+                }
+
+                /* ── Tiny screens (≤ 360px) ── */
+                @media (max-width: 360px) {
+                    .desc-section-inner { padding: 0 1rem !important; }
+                    .desc-text-p        { font-size: 0.92rem !important; line-height: 1.82 !important; }
+                    .desc-label-index   { font-size: 2.2rem !important; }
                 }
             `}</style>
 
@@ -165,6 +232,7 @@ export default function DescSection() {
                     overflow: 'hidden',
                 }}
             >
+                {/* Noise texture overlay */}
                 <div style={{
                     position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0.55,
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E")`,
@@ -182,9 +250,10 @@ export default function DescSection() {
                         return (
                             <div
                                 key={gi}
-                                className={`desc-group ${gi < groups.length - 1 ? 'desc-group-gap' : ''}`}
+                                className={`desc-group${gi < groups.length - 1 ? ' desc-group-gap' : ''}`}
                                 style={{ marginBottom: gi < groups.length - 1 ? '9rem' : 0 }}
                             >
+                                {/* ── Label column ── */}
                                 <div className="desc-label-col">
                                     <div className="desc-item desc-label-inner" style={{ transitionDelay: '0.04s' }}>
                                         <div
@@ -213,44 +282,49 @@ export default function DescSection() {
                                             }}
                                         />
 
-                                        <div
-                                            className="group-label-text"
-                                            style={{
-                                                fontFamily: '"Jost", sans-serif',
-                                                fontWeight: 200,
-                                                fontSize: '0.56rem',
-                                                letterSpacing: '0.38em',
-                                                textTransform: 'uppercase',
-                                                color: 'rgba(255,255,255,0.5)',
-                                            }}
-                                        >
-                                            {group.label}
+                                        {/* Wrapper keeps label + line together on mobile */}
+                                        <div className="desc-label-tag">
+                                            <span
+                                                className="group-label-text"
+                                                style={{
+                                                    fontFamily: '"Jost", sans-serif',
+                                                    fontWeight: 200,
+                                                    fontSize: '0.56rem',
+                                                    letterSpacing: '0.38em',
+                                                    textTransform: 'uppercase',
+                                                    color: 'rgba(255,255,255,0.5)',
+                                                }}
+                                            >
+                                                {group.label}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
 
+                                {/* ── Entries column ── */}
                                 <div>
                                     {group.entries.map((text, pi) => {
                                         const absIndex = groupStart + pi;
                                         const delay = `${0.1 + pi * 0.1}s`;
+                                        const isLast = pi === group.entries.length - 1;
 
                                         return (
                                             <div
                                                 key={pi}
-                                                className="desc-item desc-para"
+                                                className={`desc-item desc-para${!isLast ? ' desc-para-gap' : ''}`}
                                                 style={{
                                                     position: 'relative',
                                                     display: 'grid',
                                                     gridTemplateColumns: '2.4rem 1fr',
                                                     columnGap: '1.8rem',
-                                                    marginBottom: pi < group.entries.length - 1 ? '3.4rem' : 0,
+                                                    marginBottom: !isLast ? '3.4rem' : 0,
                                                     transitionDelay: delay,
                                                     cursor: 'default',
                                                     paddingLeft: '0.2rem',
                                                 }}
                                             >
                                                 <div
-                                                    className="desc-numeral desc-para-grid"
+                                                    className="desc-numeral desc-numeral-text"
                                                     style={{
                                                         fontFamily: '"Cormorant Garamond", serif',
                                                         fontWeight: 300,
@@ -288,6 +362,7 @@ export default function DescSection() {
                         );
                     })}
 
+                    {/* ── Closing bar ── */}
                     <div
                         className="desc-item desc-closing"
                         style={{
@@ -297,16 +372,21 @@ export default function DescSection() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
+                            flexWrap: 'wrap',
+                            gap: '1rem',
                         }}
                     >
-                        <div style={{
-                            fontFamily: '"Cormorant Garamond", serif',
-                            fontWeight: 300,
-                            fontSize: '0.72rem',
-                            fontStyle: 'italic',
-                            color: 'rgba(255,255,255,0.35)',
-                            letterSpacing: '0.06em',
-                        }}>
+                        <div
+                            className="desc-closing-loc"
+                            style={{
+                                fontFamily: '"Cormorant Garamond", serif',
+                                fontWeight: 300,
+                                fontSize: '0.72rem',
+                                fontStyle: 'italic',
+                                color: 'rgba(255,255,255,0.35)',
+                                letterSpacing: '0.06em',
+                            }}
+                        >
                             Samarinda · East Kalimantan
                         </div>
 
