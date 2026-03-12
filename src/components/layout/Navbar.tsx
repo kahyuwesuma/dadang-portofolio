@@ -45,9 +45,11 @@ export default function Navbar() {
     { label: 'Media Appearance' },
   ];
 
-  // Desktop: hitam saat transparan (di atas hero terang), putih saat scrolled (di atas bar gelap)
-  const desktopLinkColor = isScrolled ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.75)';
-  const desktopLinkHover = isScrolled ? 'rgba(255,255,255,1)' : 'rgba(0,0,0,1)';
+  // Transparan di atas hero: putih + drop shadow agar terbaca di foto outdoor
+  // Scrolled: putih di atas frosted dark navbar
+  const desktopLinkColor = 'rgba(255,255,255,0.88)';
+  const desktopLinkHover = 'rgba(255,255,255,1)';
+  const desktopTextShadow = '0 1px 6px rgba(0,0,0,0.55), 0 0px 20px rgba(0,0,0,0.3)';
 
   return (
     <>
@@ -105,9 +107,9 @@ export default function Navbar() {
         style={{
           animation: 'navSlideDown 0.6s cubic-bezier(0.16,1,0.3,1) both',
           transition: 'background 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.4s ease',
-          background: isScrolled ? 'rgba(10,10,10,0.72)' : 'transparent',
-          backdropFilter: isScrolled ? 'blur(18px) saturate(1.4)' : 'none',
-          WebkitBackdropFilter: isScrolled ? 'blur(18px) saturate(1.4)' : 'none',
+          background: isScrolled ? 'rgba(10,10,10,0.72)' : 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, transparent 100%)',
+          backdropFilter: isScrolled ? 'blur(18px) saturate(1.4)' : 'blur(8px)',
+          WebkitBackdropFilter: isScrolled ? 'blur(18px) saturate(1.4)' : 'blur(8px)',
           boxShadow: isScrolled ? '0 1px 0 rgba(255,255,255,0.06)' : 'none',
         }}
       >
@@ -115,7 +117,7 @@ export default function Navbar() {
           className="max-w-7xl mx-auto px-6 lg:px-10 flex justify-end items-center"
           style={{ height: '64px' }}
         >
-          {/* Desktop Links — kanan, hitam di atas hero */}
+          {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <button
@@ -129,11 +131,12 @@ export default function Navbar() {
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
                   color: desktopLinkColor,
+                  textShadow: desktopTextShadow,
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
                   padding: '2px 0',
-                  transition: 'color 0.3s ease',
+                  transition: 'color 0.3s ease, text-shadow 0.3s ease',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = desktopLinkHover)}
                 onMouseLeave={e => (e.currentTarget.style.color = activeLink === link.label ? desktopLinkHover : desktopLinkColor)}
@@ -151,13 +154,13 @@ export default function Navbar() {
             style={{
               width: '36px',
               height: '36px',
-              // Hamburger: hitam di atas hero, putih saat scrolled
-              color: isScrolled ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.8)',
+              color: 'rgba(255,255,255,0.95)',
+              filter: 'drop-shadow(0 1px 4px rgba(0,0,0,0.6))',
               background: 'none',
               border: 'none',
               cursor: 'pointer',
               padding: 0,
-              transition: 'color 0.3s ease',
+              transition: 'color 0.3s ease, filter 0.3s ease',
             }}
           >
             <span className="hamburger-line line-top" />

@@ -1,11 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import { Dancing_Script } from 'next/font/google';
+import { Charmonman } from 'next/font/google';
 
-const dancingScript = Dancing_Script({
+const charmonman = Charmonman({
     subsets: ['latin'],
-    weight: ['600'],
+    weight: ['700'],
     display: 'swap',
 });
 
@@ -34,7 +34,7 @@ export default function HeroSection() {
             >
                 <div className="absolute inset-0">
                     <Image
-                        src="/images/profile2.2.png"
+                        src="/images/profile4.jpeg"
                         alt="Dr. Dadang I K Mujiono"
                         fill
                         sizes="(max-width: 768px) 100vw, 100vw"
@@ -66,14 +66,14 @@ export default function HeroSection() {
                     }}
                 >
                     <h1
-                        className={dancingScript.className}
+                        className={charmonman.className}
                         style={{
-                            fontWeight: 600,
+                            fontWeight: 700,
                             fontSize: 'clamp(2.8rem, 6vw, 5rem)',
                             color: '#ffffff',
                             letterSpacing: '0.01em',
                             lineHeight: 1.1,
-                            marginBottom: '0.45rem',
+                            marginBottom: '0',
                             textShadow: '0 2px 24px rgba(0,0,0,0.5)',
                         }}
                     >
@@ -88,6 +88,7 @@ export default function HeroSection() {
                             letterSpacing: '0.2em',
                             textTransform: 'uppercase',
                             color: 'rgba(255,255,255,0.72)',
+                            marginTop: '1.5rem',
                         }}
                     >
                         Academic &nbsp;|&nbsp; Conservationist
