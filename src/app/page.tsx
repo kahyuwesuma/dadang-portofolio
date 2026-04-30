@@ -4,26 +4,27 @@ import DescSection from '@/components/sections/DescSection';
 import PublikasiSection from '@/components/sections/PublikasiSection';
 import KontakSection from '@/components/sections/KontakSection';
 import SectionDivider from '@/components/ui/SectionDivider';
-import { getPublikasiWithTags, getPengabdian, getStatistik } from '@/lib/supabase';
+import { getPublikasiWithTags, getPengabdian, getStatistik, getHeroContent, getDescContent } from '@/lib/supabase';
 
 export const revalidate = 60;
 
 export default async function Home() {
 
-  const [publikasi, pengabdian, statistik] = await Promise.all([
+  const [publikasi, pengabdian, statistik, heroData, descData] = await Promise.all([
     getPublikasiWithTags(),
     getPengabdian(),
-    getStatistik()
-
+    getStatistik(),
+    getHeroContent(),
+    getDescContent()
   ]);
 
   return (
     <>
-      <HeroSection />
+      <HeroSection initialData={heroData} />
 
       <SectionDivider />
 
-      <DescSection />
+      <DescSection initialData={descData} />
 
       <SectionDivider />
 

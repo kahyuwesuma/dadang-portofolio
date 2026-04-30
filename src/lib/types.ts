@@ -68,3 +68,23 @@ export interface SearchBoxProps {
   onChange: (value: string) => void;
   placeholder: string;
 }
+
+export interface HeroContent {
+  id: number;
+  image_url: string;
+  title: string;
+  subtitle: string;
+  updated_at?: string;
+}
+
+export interface DescGroup {
+  label: string;
+  index: string;
+  entries: string[];
+}
+
+export interface DescContent {
+  id: number;
+  groups: DescGroup[];
+  updated_at?: string;
+}

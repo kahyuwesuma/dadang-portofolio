@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { revalidatePath } from 'next/cache';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -34,6 +35,8 @@ export async function POST(req: NextRequest) {
       .upsert({ id: 1, groups, updated_at: new Date().toISOString() });
 
     if (error) throw error;
+
+    revalidatePath('/');
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error('[desc-content POST]', err);

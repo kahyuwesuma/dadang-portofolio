@@ -1,34 +1,21 @@
 // src/components/sections/DescSection.tsx
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { DescContent } from '@/lib/types';
 
 const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV'];
 
-interface DescGroup {
-  label: string;
-  index: string;
-  entries: string[];
+interface DescSectionProps {
+  initialData: DescContent;
 }
 
-export default function DescSection() {
+export default function DescSection({ initialData }: DescSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [groups, setGroups] = useState<DescGroup[]>([]);
-  const [loading, setLoading] = useState(true);
+  const groups = initialData.groups;
 
   useEffect(() => {
-    // Fetch dari API (Supabase) bukan static JSON
-    fetch('/api/desc-content')
-      .then(r => r.json())
-      .then(data => {
-        setGroups(data.groups ?? []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    if (loading || groups.length === 0) return;
+    if (groups.length === 0) return;
     const items = sectionRef.current?.querySelectorAll('.desc-item');
     if (!items) return;
     const observer = new IntersectionObserver(
@@ -44,7 +31,7 @@ export default function DescSection() {
     );
     items.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [loading, groups]);
+  }, [groups]);
 
   let paraIndex = 0;
 
@@ -148,93 +135,79 @@ export default function DescSection() {
           className="desc-section-inner"
           style={{ maxWidth: '900px', margin: '0 auto', padding: '0 3rem', position: 'relative', zIndex: 1 }}
         >
-          {loading ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              {[1,2,3].map(i => (
-                <div key={i} style={{
-                  height: '1.1rem',
-                  background: 'rgba(255,255,255,0.06)',
-                  borderRadius: '2px',
-                  width: i === 2 ? '70%' : '100%',
-                  animation: 'pulse 2s ease-in-out infinite',
-                }} />
-              ))}
-            </div>
-          ) : (
-            groups.map((group, gi) => {
-              const groupStart = paraIndex;
-              paraIndex += group.entries.length;
+          {groups.map((group, gi) => {
+            const groupStart = paraIndex;
+            paraIndex += group.entries.length;
 
-              return (
-                <div
-                  key={gi}
-                  className={`desc-group${gi < groups.length - 1 ? ' desc-group-gap' : ''}`}
-                  style={{ marginBottom: gi < groups.length - 1 ? '9rem' : 0 }}
-                >
-                  <div className="desc-label-col">
-                    <div className="desc-item desc-label-inner" style={{ transitionDelay: '0.04s' }}>
-                      <div className="desc-label-index" style={{
-                        fontFamily: '"Jost", sans-serif', fontWeight: 100, fontSize: '4.5rem',
-                        lineHeight: 1, color: 'rgba(255,255,255,0.65)', letterSpacing: '-0.02em',
-                        marginBottom: '1.4rem', userSelect: 'none',
+            return (
+              <div
+                key={gi}
+                className={`desc-group${gi < groups.length - 1 ? ' desc-group-gap' : ''}`}
+                style={{ marginBottom: gi < groups.length - 1 ? '9rem' : 0 }}
+              >
+                <div className="desc-label-col">
+                  <div className="desc-item desc-label-inner" style={{ transitionDelay: '0.04s' }}>
+                    <div className="desc-label-index" style={{
+                      fontFamily: '"Jost", sans-serif', fontWeight: 100, fontSize: '4.5rem',
+                      lineHeight: 1, color: 'rgba(255,255,255,0.65)', letterSpacing: '-0.02em',
+                      marginBottom: '1.4rem', userSelect: 'none',
+                    }}>
+                      {group.index}
+                    </div>
+                    <div className="desc-label-divider" style={{
+                      width: '20px', height: '1px', background: 'rgba(255,255,255,0.55)', marginBottom: '1.1rem',
+                    }} />
+                    <div className="desc-label-tag">
+                      <span className="group-label-text" style={{
+                        fontFamily: '"Jost", sans-serif', fontWeight: 300, fontSize: '0.58rem',
+                        letterSpacing: '0.36em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.72)',
                       }}>
-                        {group.index}
-                      </div>
-                      <div className="desc-label-divider" style={{
-                        width: '20px', height: '1px', background: 'rgba(255,255,255,0.55)', marginBottom: '1.1rem',
-                      }} />
-                      <div className="desc-label-tag">
-                        <span className="group-label-text" style={{
-                          fontFamily: '"Jost", sans-serif', fontWeight: 300, fontSize: '0.58rem',
-                          letterSpacing: '0.36em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.72)',
-                        }}>
-                          {group.label}
-                        </span>
-                      </div>
+                        {group.label}
+                      </span>
                     </div>
                   </div>
-
-                  <div>
-                    {group.entries.map((text, pi) => {
-                      const absIndex = groupStart + pi;
-                      const isLast = pi === group.entries.length - 1;
-                      return (
-                        <div
-                          key={pi}
-                          className={`desc-item desc-para${!isLast ? ' desc-para-gap' : ''}`}
-                          style={{
-                            position: 'relative', display: 'grid',
-                            gridTemplateColumns: '2.4rem 1fr', columnGap: '1.8rem',
-                            marginBottom: !isLast ? '3.4rem' : 0,
-                            transitionDelay: `${0.1 + pi * 0.1}s`,
-                            cursor: 'default', paddingLeft: '0.2rem',
-                          }}
-                        >
-                          <div className="desc-numeral desc-numeral-text" style={{
-                            fontFamily: '"Cormorant Garamond", serif', fontWeight: 400,
-                            fontSize: '0.68rem', color: 'rgba(255,255,255,0.55)',
-                            letterSpacing: '0.08em', paddingTop: '0.52rem',
-                            textAlign: 'right', userSelect: 'none', lineHeight: 1,
-                          }}>
-                            {romanNumerals[absIndex]}
-                          </div>
-                          <p className="desc-text desc-text-p" style={{
-                            fontFamily: '"EB Garamond", serif', fontWeight: 400,
-                            fontSize: '1.13rem', lineHeight: 2,
-                            color: 'rgba(255,255,255,0.92)', margin: 0, letterSpacing: '0.012em',
-                          }}>
-                            {text}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
                 </div>
-              );
-            })
-          )}
+
+                <div>
+                  {group.entries.map((text, pi) => {
+                    const absIndex = groupStart + pi;
+                    const isLast = pi === group.entries.length - 1;
+                    return (
+                      <div
+                        key={pi}
+                        className={`desc-item desc-para${!isLast ? ' desc-para-gap' : ''}`}
+                        style={{
+                          position: 'relative', display: 'grid',
+                          gridTemplateColumns: '2.4rem 1fr', columnGap: '1.8rem',
+                          marginBottom: !isLast ? '3.4rem' : 0,
+                          transitionDelay: `${0.1 + pi * 0.1}s`,
+                          cursor: 'default', paddingLeft: '0.2rem',
+                        }}
+                      >
+                        <div className="desc-numeral desc-numeral-text" style={{
+                          fontFamily: '"Cormorant Garamond", serif', fontWeight: 400,
+                          fontSize: '0.68rem', color: 'rgba(255,255,255,0.55)',
+                          letterSpacing: '0.08em', paddingTop: '0.52rem',
+                          textAlign: 'right', userSelect: 'none', lineHeight: 1,
+                        }}>
+                          {romanNumerals[absIndex]}
+                        </div>
+                        <p className="desc-text desc-text-p" style={{
+                          fontFamily: '"EB Garamond", serif', fontWeight: 400,
+                          fontSize: '1.13rem', lineHeight: 2,
+                          color: 'rgba(255,255,255,0.92)', margin: 0, letterSpacing: '0.012em',
+                        }}>
+                          {text}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
     </>
   );
-} 
+}

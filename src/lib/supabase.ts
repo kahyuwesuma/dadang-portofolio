@@ -1,10 +1,46 @@
 import { createClient } from '@supabase/supabase-js';
-import type { Publikasi, PengabdianMasyarakat, Statistik } from './types';
+import type { Publikasi, PengabdianMasyarakat, Statistik, HeroContent, DescContent } from './types';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+export async function getHeroContent(): Promise<HeroContent> {
+    const { data, error } = await supabase
+        .from('hero_content')
+        .select('*')
+        .eq('id', 1)
+        .single();
+
+    if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching hero content:', error);
+    }
+
+    return data || {
+        id: 1,
+        image_url: '/images/profile4.jpeg',
+        title: 'Dr. Dadang I K Mujiono',
+        subtitle: 'Academic | Conservationist'
+    };
+}
+
+export async function getDescContent(): Promise<DescContent> {
+    const { data, error } = await supabase
+        .from('desc_content')
+        .select('groups')
+        .eq('id', 1)
+        .single();
+
+    if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching desc content:', error);
+    }
+
+    return {
+        id: 1,
+        groups: data?.groups ?? []
+    };
+}
 
 export async function getPublikasi() {
     const { data, error } = await supabase

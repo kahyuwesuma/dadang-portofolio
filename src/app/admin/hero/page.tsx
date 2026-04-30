@@ -59,19 +59,67 @@ export default function HeroEditorPage() {
     }
   };
 
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        const img = new (window as any).Image();
+        img.src = e.target?.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          // Max width 1920px for hero
+          const MAX_WIDTH = 1920;
+          if (width > MAX_WIDTH) {
+            height = (MAX_WIDTH / width) * height;
+            width = MAX_WIDTH;
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          // Compress to WebP (much lighter) with 0.8 quality
+          resolve(canvas.toDataURL('image/webp', 0.8));
+        };
+      };
+    });
+  };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Client-side check for 4MB
+    if (file.size > 4 * 1024 * 1024) {
+      setStatus('error');
+      setMessage('File too large. Maximum size is 4MB.');
+      setTimeout(() => setStatus('idle'), 4000);
+      return;
+    }
+
     setUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
+    setStatus('idle');
 
     try {
+      // Optimize image BEFORE sending to server
+      const optimizedBase64 = await compressImage(file);
+      
+      // Since we already have the base64, we can update local state immediately
+      // and just send it to the hero-content API when user clicks Save.
+      // Or we can still use the upload API but send the compressed version.
+      
+      // Let's send the optimized version to the upload API
       const res = await fetch('/api/upload', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ base64: optimizedBase64, type: 'image/webp' }),
       });
+      
       const json = await res.json();
       
       if (!res.ok) {
@@ -80,10 +128,14 @@ export default function HeroEditorPage() {
 
       if (json.url) {
         setData(prev => ({ ...prev, image_url: json.url }));
+        setStatus('success');
+        setMessage('Image optimized & uploaded');
+        setTimeout(() => setStatus('idle'), 3000);
       }
     } catch (err: any) {
       console.error('Upload failed', err);
-      alert(err.message || 'Failed to upload image');
+      setStatus('error');
+      setMessage(err.message || 'Failed to upload image');
     } finally {
       setUploading(false);
     }
@@ -176,13 +228,6 @@ export default function HeroEditorPage() {
               Save Changes
             </button>
           </div>
-
-          {status !== 'idle' && (
-            <div className={`flex items-center gap-2 p-4 rounded-lg ${status === 'success' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
-              {status === 'success' ? <Check className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
-              <span className="text-sm font-medium">{message}</span>
-            </div>
-          )}
         </div>
 
         <div className="hidden md:block">
@@ -206,6 +251,29 @@ export default function HeroEditorPage() {
           </div>
         </div>
       </div>
+
+      {/* Modern Toast Notification - Fixed at bottom center for best visibility */}
+      {status !== 'idle' && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className={`
+            flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-md border
+            ${status === 'success' 
+              ? 'bg-emerald-500/90 text-white border-emerald-400/20' 
+              : 'bg-red-500/90 text-white border-red-400/20'}
+          `}>
+            {status === 'success' ? (
+              <div className="bg-white/20 p-1 rounded-full">
+                <Check className="w-5 h-5" />
+              </div>
+            ) : (
+              <div className="bg-white/20 p-1 rounded-full">
+                <AlertCircle className="w-5 h-5" />
+              </div>
+            )}
+            <span className="font-medium text-sm whitespace-nowrap">{message}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

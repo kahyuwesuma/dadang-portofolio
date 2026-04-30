@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Charmonman } from 'next/font/google';
-import { useEffect, useState } from 'react';
+import { HeroContent } from '@/lib/types';
 
 const charmonman = Charmonman({
     subsets: ['latin'],
@@ -10,29 +10,14 @@ const charmonman = Charmonman({
     display: 'swap',
 });
 
-interface HeroData {
-    image_url: string;
-    title: string;
-    subtitle: string;
+interface HeroSectionProps {
+    initialData: HeroContent;
 }
 
-export default function HeroSection() {
-    const [data, setData] = useState<HeroData | null>(null);
-
-    useEffect(() => {
-        fetch('/api/hero-content')
-            .then(res => res.json())
-            .then(json => {
-                if (json && !json.error) {
-                    setData(json);
-                }
-            })
-            .catch(err => console.error('Failed to fetch hero content', err));
-    }, []);
-
-    const heroImage = data?.image_url || "/images/profile4.jpeg";
-    const heroTitle = data?.title || "Dr. Dadang I K Mujiono";
-    const heroSubtitle = data?.subtitle || "Academic | Conservationist";
+export default function HeroSection({ initialData }: HeroSectionProps) {
+    const heroImage = initialData?.image_url || "/images/profile4.jpeg";
+    const heroTitle = initialData?.title || "Dr. Dadang I K Mujiono";
+    const heroSubtitle = initialData?.subtitle || "Academic | Conservationist";
 
     return (
         <>
