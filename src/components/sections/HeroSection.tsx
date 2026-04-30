@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { Charmonman } from 'next/font/google';
+import { useEffect, useState } from 'react';
 
 const charmonman = Charmonman({
     subsets: ['latin'],
@@ -9,7 +10,30 @@ const charmonman = Charmonman({
     display: 'swap',
 });
 
+interface HeroData {
+    image_url: string;
+    title: string;
+    subtitle: string;
+}
+
 export default function HeroSection() {
+    const [data, setData] = useState<HeroData | null>(null);
+
+    useEffect(() => {
+        fetch('/api/hero-content')
+            .then(res => res.json())
+            .then(json => {
+                if (json && !json.error) {
+                    setData(json);
+                }
+            })
+            .catch(err => console.error('Failed to fetch hero content', err));
+    }, []);
+
+    const heroImage = data?.image_url || "/images/profile4.jpeg";
+    const heroTitle = data?.title || "Dr. Dadang I K Mujiono";
+    const heroSubtitle = data?.subtitle || "Academic | Conservationist";
+
     return (
         <>
             <style>{`
@@ -71,8 +95,8 @@ export default function HeroSection() {
             >
                 <div className="absolute inset-0">
                     <Image
-                        src="/images/profile4.jpeg"
-                        alt="Dr. Dadang I K Mujiono"
+                        src={heroImage}
+                        alt={heroTitle}
                         fill
                         sizes="(max-width: 600px) 100vw, (max-width: 900px) 100vw, 100vw"
                         priority
@@ -116,7 +140,7 @@ export default function HeroSection() {
                             textShadow: '0 2px 28px rgba(0,0,0,0.55)',
                         }}
                     >
-                        Dr. Dadang I K Mujiono
+                        {heroTitle}
                     </h1>
 
                     <p
@@ -129,7 +153,12 @@ export default function HeroSection() {
                             marginTop: '1.4rem',
                         }}
                     >
-                        Academic &nbsp;|&nbsp; Conservationist
+                        {heroSubtitle.split('|').map((part, i, arr) => (
+                            <span key={i}>
+                                {part.trim()}
+                                {i < arr.length - 1 && <span> &nbsp;|&nbsp; </span>}
+                            </span>
+                        ))}
                     </p>
                 </div>
             </section>
